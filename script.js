@@ -186,7 +186,7 @@
       el('div', { className: 'nav-inner' },
         // Brand
         el('a', { href: '#', className: 'nav-brand' },
-          el('div', { className: 'nav-logo-box' }, svgIcon('logo', 18, '#FFFFFF')),
+          el('img', { src: 'assets/logo.png', alt: 'Neurolink', className: 'nav-logo-img', width: 28, height: 28 }),
           el('span', {}, 'Neurolink')
         ),
 
@@ -296,13 +296,7 @@
   // ==========================================================================
 
   function createTrustStrip() {
-    const brands = [
-      { name: 'Linear', symbol: '▲' },
-      { name: 'Raycast', symbol: '⌘' },
-      { name: 'Vercel', symbol: '▲' },
-      { name: 'Supabase', symbol: '⚡' },
-      { name: 'Loom', symbol: '⏺' }
-    ];
+    const brands = ['Linear', 'Raycast', 'Vercel', 'Supabase', 'Loom'];
 
     return el('section', { className: 'trust-strip-section' },
       el('div', { className: 'container' },
@@ -310,9 +304,8 @@
           'TRUSTED BY 40,000+ MAKERS, DESIGNERS, AND ENGINEERING TEAMS'
         ),
         el('div', { className: 'trust-logos' },
-          brands.map(b => el('div', { className: 'trust-logo-item' },
-            el('span', { style: { fontSize: '15px', color: 'var(--accent-blue)' } }, b.symbol),
-            el('span', {}, b.name)
+          brands.map(name => el('div', { className: 'trust-logo-item' },
+            el('span', {}, name)
           ))
         )
       )
@@ -768,26 +761,252 @@
         name: 'Marcus Vance',
         role: 'Independent Systems Consultant',
         avatar: 'assets/avatar3.png'
+      },
+      {
+        quote: '“The block nesting combined with clean markdown export is a game changer for technical specs, backlog grooming, and system architecture.”',
+        name: 'Josh Miller',
+        role: 'Head of Product, NorthStar',
+        avatar: 'assets/josh.png'
+      },
+      {
+        quote: '“We ditched our bloated enterprise wiki and migrated our entire roadmap here in an afternoon. Fast, offline-ready, and calm.”',
+        name: 'Sarah Chen',
+        role: 'Founder, HyperScale Studio',
+        avatar: 'assets/user1.png'
+      },
+      {
+        quote: '“Finally an editor that respects pure speed. Keyboard navigation is instantaneous and real-time sync never conflicts.”',
+        name: 'David Park',
+        role: 'Engineering Lead, Kernel Labs',
+        avatar: 'assets/user2.png'
       }
     ];
 
-    const cardsGrid = el('div', { className: 'testimonials-grid' },
-      reviews.map(r => el('div', { className: 'testimonial-card' },
-        el('p', { className: 'testimonial-quote' }, r.quote),
-        el('div', { className: 'testimonial-author' },
-          el('img', { src: r.avatar, alt: r.name, className: 'testimonial-avatar' }),
-          el('div', {},
-            el('div', { className: 'author-name' }, r.name),
-            el('div', { className: 'author-role' }, r.role)
-          )
+    const cardElements = reviews.map(r => el('div', { className: 'testimonial-card' },
+      el('p', { className: 'testimonial-quote' }, r.quote),
+      el('div', { className: 'testimonial-author' },
+        el('img', { src: r.avatar, alt: r.name, className: 'testimonial-avatar', loading: 'lazy' }),
+        el('div', {},
+          el('div', { className: 'author-name' }, r.name),
+          el('div', { className: 'author-role' }, r.role)
         )
-      ))
+      )
+    ));
+
+    const track = el('div', { className: 'testimonials-track' }, ...cardElements);
+
+    let currentSlide = 0;
+    let autoSwipeInterval = null;
+    let scrollTimeout = null;
+    let userInteracting = false;
+    let isVisible = true;
+    let dots = [];
+
+    const controls = el('div', { className: 'testimonials-controls' });
+
+    function getVisibleCount() {
+      if (window.innerWidth <= 768) return 1;
+      if (window.innerWidth <= 1024) return 2;
+      return 3;
+    }
+
+    function getTotalSlides() {
+      const visible = getVisibleCount();
+      return Math.ceil(reviews.length / visible);
+    }
+
+    function updateActiveDot(slideIdx) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === slideIdx);
+      });
+    }
+
+    function scrollToSlide(slideIdx, smooth = true) {
+      const visible = getVisibleCount();
+      const totalSlides = getTotalSlides();
+      const validSlide = Math.max(0, Math.min(slideIdx, totalSlides - 1));
+      currentSlide = validSlide;
+
+      const targetCardIndex = Math.min(validSlide * visible, reviews.length - 1);
+      const targetCard = cardElements[targetCardIndex];
+      if (!targetCard) return;
+
+      const targetLeft = targetCard.offsetLeft - track.offsetLeft;
+      track.scrollTo({
+        left: targetLeft,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+      updateActiveDot(validSlide);
+    }
+
+    function renderDots() {
+      controls.innerHTML = '';
+      dots = [];
+      const totalSlides = getTotalSlides();
+
+      if (currentSlide >= totalSlides) {
+        currentSlide = totalSlides - 1;
+      }
+
+      for (let s = 0; s < totalSlides; s++) {
+        const dot = el('button', {
+          className: `testimonial-dot ${s === currentSlide ? 'active' : ''}`,
+          'aria-label': `Go to slide ${s + 1} of ${totalSlides}`,
+          onclick: () => {
+            userInteracting = true;
+            scrollToSlide(s, true);
+            resetCooldown();
+          }
+        });
+        dots.push(dot);
+        controls.appendChild(dot);
+      }
+    }
+
+    // Initial render of dots matching the current screen breakpoint
+    renderDots();
+
+    const wrapper = el('div', { className: 'testimonials-carousel-wrapper' },
+      track,
+      controls
     );
+
+    function nextSlide() {
+      const totalSlides = getTotalSlides();
+      const nextSlideIdx = (currentSlide + 1) % totalSlides;
+      scrollToSlide(nextSlideIdx, true);
+    }
+
+    function startAutoSwipe() {
+      stopAutoSwipe();
+      autoSwipeInterval = setInterval(() => {
+        if (!userInteracting && isVisible) {
+          nextSlide();
+        }
+      }, 2500); // Swipe every 2.5 seconds
+    }
+
+    function stopAutoSwipe() {
+      if (autoSwipeInterval) {
+        clearInterval(autoSwipeInterval);
+        autoSwipeInterval = null;
+      }
+    }
+
+    function resetCooldown() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        userInteracting = false;
+        startAutoSwipe();
+      }, 2500);
+    }
+
+    // Pause when user is scrolling the track & update active slide dot
+    track.addEventListener('scroll', () => {
+      const currentScroll = track.scrollLeft;
+      const visible = getVisibleCount();
+      const totalSlides = getTotalSlides();
+      let closestSlide = 0;
+      let closestDist = Infinity;
+
+      for (let s = 0; s < totalSlides; s++) {
+        const targetCardIndex = Math.min(s * visible, reviews.length - 1);
+        const targetLeft = cardElements[targetCardIndex].offsetLeft - track.offsetLeft;
+        const dist = Math.abs(currentScroll - targetLeft);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestSlide = s;
+        }
+      }
+
+      if (closestSlide !== currentSlide) {
+        currentSlide = closestSlide;
+        updateActiveDot(closestSlide);
+      }
+
+      userInteracting = true;
+      resetCooldown();
+    }, { passive: true });
+
+    // Touch events for mobile
+    track.addEventListener('touchstart', () => {
+      userInteracting = true;
+      stopAutoSwipe();
+    }, { passive: true });
+
+    track.addEventListener('touchend', () => {
+      resetCooldown();
+    }, { passive: true });
+
+    // Desktop hover pause
+    track.addEventListener('mouseenter', () => {
+      userInteracting = true;
+    });
+
+    track.addEventListener('mouseleave', () => {
+      userInteracting = false;
+    });
+
+    // Desktop drag-to-scroll support
+    let isMouseDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isMouseDown = true;
+      userInteracting = true;
+      stopAutoSwipe();
+      startX = e.pageX - track.offsetLeft;
+      scrollStart = track.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        resetCooldown();
+      }
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isMouseDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      track.scrollLeft = scrollStart - walk;
+    });
+
+    // Window resize listener to recompute dots if viewport width changes
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        renderDots();
+        scrollToSlide(currentSlide, false);
+      }, 150);
+    });
+
+    // Start auto-swipe timer
+    startAutoSwipe();
+
+    // IntersectionObserver to pause when offscreen
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isVisible = entry.isIntersecting;
+        });
+      }, { threshold: 0.1 });
+      observer.observe(wrapper);
+    }
+
+    // VisibilityChange to pause when user switches browser tabs
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+    });
 
     return el('section', { className: 'testimonials-section' },
       el('span', { className: 'section-tag' }, 'WALL OF LOVE'),
       el('h2', { className: 'section-title' }, 'Loved by people who think in structure'),
-      cardsGrid
+      wrapper
     );
   }
 
@@ -982,7 +1201,7 @@
           // Col 1: Brand
           el('div', { className: 'footer-brand-col' },
             el('div', { className: 'footer-brand-title' },
-              el('div', { className: 'nav-logo-box' }, svgIcon('logo', 16, '#FFFFFF')),
+              el('img', { src: 'assets/logo.png', alt: 'Neurolink', className: 'nav-logo-img', width: 26, height: 26 }),
               el('span', {}, 'Neurolink')
             ),
             el('p', { className: 'footer-brand-desc' },
