@@ -74,7 +74,8 @@
       gitPull: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>`,
       trash: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
       dots: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`,
-      menu: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`
+      menu: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`,
+      close: `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
     };
 
     const span = document.createElement('span');
@@ -116,6 +117,71 @@
   // ==========================================================================
 
   function createHeader() {
+    let mobileOpen = false;
+
+    const toggleBtn = el('button', {
+      className: 'mobile-menu-toggle',
+      'aria-label': 'Toggle navigation menu',
+      onclick: () => toggleMobile(!mobileOpen)
+    }, svgIcon('menu', 20));
+
+    const mobileDrawer = el('div', { className: 'mobile-nav-drawer' },
+      el('a', {
+        href: '#features',
+        className: 'mobile-nav-link',
+        onclick: () => toggleMobile(false)
+      }, 'Features'),
+      el('a', {
+        href: '#views',
+        className: 'mobile-nav-link',
+        onclick: () => toggleMobile(false)
+      }, 'Views'),
+      el('a', {
+        href: '#workflows',
+        className: 'mobile-nav-link',
+        onclick: () => toggleMobile(false)
+      }, 'Workflows'),
+      el('a', {
+        href: '#pricing',
+        className: 'mobile-nav-link',
+        onclick: () => toggleMobile(false)
+      }, 'Pricing'),
+      el('div', { className: 'mobile-nav-divider' }),
+      el('button', {
+        className: 'btn-ghost mobile-btn',
+        onclick: () => {
+          toggleMobile(false);
+          showToast('Opening login portal...');
+        }
+      }, 'Log in'),
+      el('button', {
+        className: 'btn-primary mobile-btn',
+        onclick: () => {
+          toggleMobile(false);
+          const emailInput = document.querySelector('.hero-input');
+          if (emailInput) {
+            emailInput.focus();
+            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            showToast('Welcome to Neurolink! Enter your email to begin.');
+          }
+        }
+      }, 'Get Started')
+    );
+
+    function toggleMobile(open) {
+      mobileOpen = open;
+      if (mobileOpen) {
+        mobileDrawer.classList.add('open');
+        toggleBtn.innerHTML = '';
+        toggleBtn.appendChild(svgIcon('close', 20));
+      } else {
+        mobileDrawer.classList.remove('open');
+        toggleBtn.innerHTML = '';
+        toggleBtn.appendChild(svgIcon('menu', 20));
+      }
+    }
+
     return el('header', { className: 'top-navbar' },
       el('div', { className: 'nav-inner' },
         // Brand
@@ -150,31 +216,30 @@
               }
             }
           }, 'Get Started'),
-          el('button', {
-            className: 'mobile-menu-toggle',
-            onclick: () => {
-              const nav = document.querySelector('.nav-links');
-              if (nav) {
-                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '64px';
-                nav.style.left = '0';
-                nav.style.right = '0';
-                nav.style.background = 'var(--bg-body)';
-                nav.style.padding = '20px';
-                nav.style.borderBottom = '1px solid var(--border-color)';
-              }
-            }
-          }, svgIcon('menu', 20))
+          toggleBtn
         )
-      )
+      ),
+      mobileDrawer
     );
   }
 
   // ==========================================================================
-  // 3. HERO SECTION WITH INTERACTIVE DASHBOARD BOARD
+  // 3. HERO SECTION WITH FIXED DASHBOARD PICTURE SHOWCASE
   // ==========================================================================
+
+  function createHeroDashboardImage() {
+    return el('div', { className: 'hero-dashboard-frame' },
+      el('img', {
+        src: 'assets/hero-dashboard.png',
+        alt: 'Neurolink Task Management Dashboard',
+        className: 'hero-dashboard-img',
+        loading: 'eager',
+        decoding: 'async',
+        width: 1152,
+        height: 615
+      })
+    );
+  }
 
   function createHeroSection() {
     // Email Form
@@ -209,8 +274,8 @@
       el('div', { className: 'trust-item' }, 'Real-time sync')
     );
 
-    // Dashboard Mockup Assembly
-    const dashboard = createInteractiveDashboard();
+    // Dashboard Fixed Picture Mockup
+    const dashboard = createHeroDashboardImage();
 
     return el('section', { className: 'hero-section' },
       el('h1', { className: 'hero-heading' },
@@ -224,414 +289,6 @@
       trustRow,
       el('div', { className: 'hero-dashboard-container' }, dashboard)
     );
-  }
-
-  /**
-   * Builds the realistic, interactive Kanban Task Management Board
-   */
-  function createInteractiveDashboard() {
-    // Sidebar
-    const sidebar = el('aside', { className: 'dash-sidebar' },
-      el('div', {},
-        el('div', { className: 'dash-brand' },
-          el('div', { className: 'dash-brand-icon' }, svgIcon('logo', 13, '#FFFFFF')),
-          el('span', {}, 'Neurolink')
-        ),
-        el('nav', { className: 'dash-nav-list' },
-          el('div', { className: 'dash-nav-item active' }, 'Dashboard'),
-          el('div', { className: 'dash-nav-item' }, 'Inbox'),
-          el('div', { className: 'dash-nav-item' }, 'Task'),
-          el('div', { className: 'dash-nav-item' }, 'Team'),
-          el('div', { className: 'dash-nav-item' }, 'Assigned to me'),
-          el('div', { className: 'dash-nav-item' }, 'Created by me')
-        ),
-        el('div', { className: 'dash-divider' }),
-        el('div', { className: 'dash-section-label' }, 'Projects'),
-        el('div', { className: 'dash-folder-group' },
-          el('div', { className: 'dash-nav-item' },
-            svgIcon('chevronDown', 10),
-            el('span', {}, 'Mobile App')
-          ),
-          el('div', { className: 'dash-folder-sub' },
-            el('div', { className: 'dash-nav-item active' }, '• Active Sprint'),
-            el('div', { className: 'dash-nav-item' }, '• Backlog')
-          ),
-          el('div', { className: 'dash-nav-item' }, svgIcon('chevronRight', 10), 'Finance Project'),
-          el('div', { className: 'dash-nav-item' }, svgIcon('chevronRight', 10), 'Landing Page')
-        )
-      ),
-      el('div', {},
-        el('div', { className: 'dash-nav-item' }, 'Settings & Members'),
-        el('div', { className: 'dash-user-pill' },
-          el('img', { src: 'assets/josh.png', alt: 'Josh Steven', className: 'dash-avatar-img' }),
-          el('div', { className: 'dash-user-info' },
-            el('div', { className: 'dash-user-name' }, 'Josh Steven'),
-            el('div', { className: 'dash-user-role' }, 'josh@gmail.com')
-          )
-        )
-      )
-    );
-
-    // Board Columns Data (based on Figma)
-    const initialColumns = [
-      {
-        id: 'pending',
-        title: 'Pending',
-        dotColor: 'var(--dot-pink)',
-        cards: [
-          {
-            title: 'Refine Dashboard Interaction States',
-            desc: 'Define clear hover, active, focused, and disabled states for all dashboard components.',
-            date: 'Nov 25, 2025',
-            priority: 'High',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }, { text: 'Mobile', cls: 'badge-mobile' }],
-            avatars: ['assets/user1.png', 'assets/user2.png'],
-            comments: 12,
-            files: '0/12'
-          },
-          {
-            title: 'Audit Navigation Usability',
-            desc: 'Review the current menu structure to identify friction points and improve user flow.',
-            date: 'Nov 25, 2025',
-            priority: 'Medium',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }, { text: 'Mobile', cls: 'badge-mobile' }],
-            avatars: ['assets/user3.png', 'assets/user4.png'],
-            comments: 5,
-            files: '0/12'
-          },
-          {
-            title: 'Design Onboarding Mockups',
-            desc: 'Create wireframes mapping out initial account activation checklist steps.',
-            date: 'Nov 25, 2025',
-            priority: 'Normal',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }],
-            avatars: ['assets/user5.png'],
-            comments: 5,
-            files: '0/4'
-          }
-        ]
-      },
-      {
-        id: 'todo',
-        title: 'To-Do',
-        dotColor: 'var(--dot-teal)',
-        cards: [
-          {
-            title: 'Optimize Database Queries',
-            desc: 'Refine backend data requests to reduce load times and improve performance.',
-            date: 'Nov 26, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }, { text: 'Mobile', cls: 'badge-mobile' }],
-            avatars: ['assets/user6.png'],
-            comments: 8,
-            files: '0/8'
-          },
-          {
-            title: 'API Integration for Login',
-            desc: 'Connect the frontend authentication forms with the backend identity system.',
-            date: 'Nov 27, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }],
-            avatars: ['assets/user7.png', 'assets/user8.png'],
-            comments: 1,
-            files: '0/4'
-          },
-          {
-            title: 'Create Iconography Set',
-            desc: "Design a consistent library of vector icons that match the brand's visual identity.",
-            date: 'Nov 28, 2025',
-            priority: 'Normal',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }],
-            avatars: ['assets/user9.png'],
-            comments: 3,
-            files: '0/20'
-          },
-          {
-            title: 'Implement Dark Mode Theme',
-            desc: 'Apply the defined dark color tokens across the application interface.',
-            date: 'Nov 29, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }, { text: 'Mobile', cls: 'badge-mobile' }],
-            avatars: ['assets/user10.png', 'assets/user11.png'],
-            comments: 9,
-            files: '0/6'
-          }
-        ]
-      },
-      {
-        id: 'progress',
-        title: 'On progress',
-        dotColor: 'var(--dot-amber)',
-        cards: [
-          {
-            title: 'Fix Header Responsive Issue',
-            desc: 'Correct layout breaking points in the navigation bar on mobile devices.',
-            date: 'Nov 30, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }],
-            avatars: ['assets/user12.png', 'assets/user13.png'],
-            comments: 3,
-            files: '1/2'
-          },
-          {
-            title: 'Finalize Typography Scale',
-            desc: 'Establish the complete hierarchy for headings, body text, and caption styles.',
-            date: 'Dec 01, 2025',
-            priority: 'Normal',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }],
-            avatars: ['assets/user14.png'],
-            comments: 6,
-            files: '4/7'
-          },
-          {
-            title: 'Fix iOS Notification Bug',
-            desc: 'Resolve the specific issue preventing push notifications from triggering on iOS.',
-            date: 'Dec 02, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }, { text: 'Mobile', cls: 'badge-mobile' }],
-            avatars: ['assets/user15.png', 'assets/user16.png'],
-            comments: 22,
-            files: '2/3'
-          }
-        ]
-      },
-      {
-        id: 'done',
-        title: 'Done',
-        dotColor: 'var(--dot-green)',
-        cards: [
-          {
-            title: 'Run Regression Testing',
-            desc: "Execute standard tests to ensure recent updates haven't introduced new defects.",
-            date: 'Dec 03, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }],
-            avatars: ['assets/user1.png', 'assets/user3.png'],
-            comments: 4,
-            files: '50/50'
-          },
-          {
-            title: 'Sketch Profile User Flow',
-            desc: 'Draw low-fidelity wireframes mapping out the steps for editing and viewing profiles.',
-            date: 'Nov 05, 2025',
-            priority: 'Normal',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }],
-            avatars: ['assets/user4.png'],
-            comments: 7,
-            files: '6/6'
-          },
-          {
-            title: 'Setup AWS S3 Buckets',
-            desc: 'Configure cloud storage containers to handle user-uploaded assets and media.',
-            date: 'Nov 06, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }],
-            avatars: ['assets/user7.png'],
-            comments: 16,
-            files: '4/4'
-          },
-          {
-            title: 'Design 404 Error Page',
-            desc: 'Create friendly illustrated fallback screen with helpful recovery links.',
-            date: 'Nov 08, 2025',
-            priority: 'Normal',
-            tags: [{ text: 'UI/UX', cls: 'badge-uiux' }],
-            avatars: ['assets/user11.png'],
-            comments: 20,
-            files: '6/6'
-          },
-          {
-            title: 'Integrate Stripe Payment',
-            desc: 'Connect webhook events and client secret creation for subscription checkouts.',
-            date: 'Nov 12, 2025',
-            priority: 'High',
-            tags: [{ text: 'Development', cls: 'badge-dev' }],
-            avatars: ['assets/user2.png', 'assets/user5.png'],
-            comments: 10,
-            files: '9/9'
-          }
-        ]
-      }
-    ];
-
-    const boardCanvas = el('div', { className: 'dash-board' });
-
-    function renderBoard(columnsData) {
-      boardCanvas.innerHTML = '';
-
-      columnsData.forEach((col) => {
-        const countSpan = el('span', { className: 'col-count' }, String(col.cards.length));
-
-        const cardsContainer = el('div', {
-          className: 'dash-cards-list',
-          ondragover: (e) => {
-            e.preventDefault();
-          },
-          ondrop: (e) => {
-            e.preventDefault();
-            const cardData = e.dataTransfer.getData('text/plain');
-            if (cardData) {
-              try {
-                const parsed = JSON.parse(cardData);
-                // Remove from original
-                columnsData.forEach(c => {
-                  c.cards = c.cards.filter(card => card.title !== parsed.title);
-                });
-                // Add to current column
-                col.cards.push(parsed);
-                renderBoard(columnsData);
-                showToast(`Moved "${parsed.title}" to ${col.title}`);
-              } catch (err) {
-                console.error(err);
-              }
-            }
-          }
-        });
-
-        col.cards.forEach((card) => {
-          const cardEl = el('div', {
-            className: 'kanban-card',
-            draggable: 'true',
-            ondragstart: (e) => {
-              e.dataTransfer.setData('text/plain', JSON.stringify(card));
-            }
-          },
-            el('div', { className: 'card-top' },
-              el('div', { className: 'card-tags' },
-                card.tags.map(t => el('span', { className: `badge-tag ${t.cls}` }, t.text))
-              ),
-              el('div', { style: { color: 'var(--text-muted)' } }, svgIcon('dots', 12))
-            ),
-            el('div', { className: 'card-title' }, card.title),
-            el('div', { className: 'card-desc' }, card.desc),
-            el('div', { className: 'card-meta-row' },
-              el('div', { className: 'card-meta-left' },
-                svgIcon('calendar', 10),
-                el('span', {}, card.date)
-              ),
-              el('div', { className: 'card-priority' },
-                svgIcon('flag', 10, 'var(--accent-blue)'),
-                el('span', {}, card.priority)
-              )
-            ),
-            el('div', { className: 'card-bottom-row' },
-              el('div', { className: 'avatar-stack' },
-                card.avatars.map(av => el('img', { src: av, alt: 'avatar' }))
-              ),
-              el('div', { className: 'card-counts' },
-                el('span', {}, svgIcon('message', 10), ` ${card.comments}`),
-                el('span', {}, svgIcon('file', 10), ` ${card.files}`)
-              )
-            )
-          );
-
-          cardsContainer.appendChild(cardEl);
-        });
-
-        const addBtn = el('button', {
-          className: 'btn-add-task',
-          onclick: () => {
-            const title = prompt(`Add new task to ${col.title}:`);
-            if (title && title.trim()) {
-              col.cards.push({
-                title: title.trim(),
-                desc: 'Created via in-dashboard quick add button.',
-                date: 'Dec 15, 2025',
-                priority: 'Normal',
-                tags: [{ text: 'Task', cls: 'badge-dev' }],
-                avatars: ['assets/user1.png'],
-                comments: 0,
-                files: '0/1'
-              });
-              renderBoard(columnsData);
-              showToast(`Added "${title.trim()}" to ${col.title}`);
-            }
-          }
-        }, svgIcon('plus', 12), ' Add task');
-
-        const colEl = el('div', { className: 'dash-column' },
-          el('div', { className: 'dash-col-header' },
-            el('div', { className: 'dash-col-title-wrap' },
-              el('span', { className: 'col-dot', style: { backgroundColor: col.dotColor } }),
-              el('span', {}, col.title)
-            ),
-            countSpan
-          ),
-          cardsContainer,
-          addBtn
-        );
-
-        boardCanvas.appendChild(colEl);
-      });
-    }
-
-    renderBoard(initialColumns);
-
-    // Dashboard Search Input
-    const searchInput = el('input', {
-      type: 'text',
-      placeholder: 'Search task...',
-      oninput: (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        if (!query) {
-          renderBoard(initialColumns);
-          return;
-        }
-        const filtered = initialColumns.map(col => ({
-          ...col,
-          cards: col.cards.filter(c =>
-            c.title.toLowerCase().includes(query) ||
-            c.desc.toLowerCase().includes(query)
-          )
-        }));
-        renderBoard(filtered);
-      }
-    });
-
-    // Top Bar
-    const dashHeader = el('div', { className: 'dash-header' },
-      el('div', { className: 'dash-header-top' },
-        el('div', { className: 'dash-breadcrumbs' },
-          el('span', {}, 'Projects'),
-          svgIcon('chevronRight', 11),
-          el('span', {}, 'Mobile'),
-          svgIcon('chevronRight', 11),
-          el('span', { className: 'current' }, 'Active Sprint')
-        ),
-        el('div', { className: 'dash-header-actions' },
-          el('div', { className: 'dash-search-box' }, svgIcon('search', 12), searchInput),
-          el('button', {
-            className: 'dash-icon-btn',
-            onclick: () => showToast('🔔 No new unread notifications')
-          }, svgIcon('bell', 12)),
-          el('button', {
-            className: 'dash-share-btn',
-            onclick: () => {
-              navigator.clipboard?.writeText(window.location.href);
-              showToast('🔗 Dashboard share link copied to clipboard!');
-            }
-          }, svgIcon('share', 11, '#FFFFFF'), 'Share')
-        )
-      ),
-      el('div', { className: 'dash-header-sub' },
-        el('div', { className: 'dash-view-tabs' },
-          el('div', { className: 'dash-view-tab' }, 'Overview'),
-          el('div', { className: 'dash-view-tab active' }, 'Board'),
-          el('div', { className: 'dash-view-tab' }, 'List'),
-          el('div', { className: 'dash-view-tab' }, 'Calendar'),
-          el('div', { className: 'dash-view-tab' }, 'Files')
-        ),
-        el('div', { className: 'dash-filters' },
-          el('div', { className: 'dash-filter-pill' }, 'Due Date Nov 16-18', svgIcon('chevronDown', 10)),
-          el('div', { className: 'dash-filter-pill' }, 'All Priority', svgIcon('chevronDown', 10)),
-          el('div', { className: 'dash-filter-pill' }, svgIcon('filter', 10), 'Filter')
-        )
-      )
-    );
-
-    const mainArea = el('div', { className: 'dash-main' }, dashHeader, boardCanvas);
-
-    return el('div', { className: 'hero-dashboard' }, sidebar, mainArea);
   }
 
   // ==========================================================================
