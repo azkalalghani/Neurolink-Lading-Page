@@ -90,27 +90,27 @@
   /**
    * Toast notification helper
    */
-  function showToast(message) {
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-      container = el('div', { className: 'toast-container' });
-      document.body.appendChild(container);
-    }
+//   function showToast(message) {
+//     let container = document.querySelector('.toast-container');
+//     if (!container) {
+//       container = el('div', { className: 'toast-container' });
+//       document.body.appendChild(container);
+//     }
 
-    const toast = el('div', { className: 'toast' },
-      svgIcon('check', 16, '#24A746'),
-      el('span', {}, message)
-    );
+//     const toast = el('div', { className: 'toast' },
+//       svgIcon('check', 16, '#24A746'),
+//       el('span', {}, message)
+//     );
 
-    container.appendChild(toast);
+//     container.appendChild(toast);
 
-    setTimeout(() => {
-      toast.style.transition = 'opacity 200ms ease, transform 200ms ease';
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      setTimeout(() => toast.remove(), 200);
-    }, 3200);
-  }
+//     setTimeout(() => {
+//       toast.style.transition = 'opacity 200ms ease, transform 200ms ease';
+//       toast.style.opacity = '0';
+//       toast.style.transform = 'translateY(10px)';
+//       setTimeout(() => toast.remove(), 200);
+//     }, 3200);
+//   }
 
   // ==========================================================================
   // 2. HEADER COMPONENT (Navigation)
