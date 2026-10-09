@@ -15,7 +15,7 @@
 
     --text-primary: #2F2E2C;
     --text-secondary: #6B6966;
-    --text-muted: #9B9A97;
+    --text-muted: #6E6D6A;
     --text-light: #FFFFFF;
 
     --border-color: #EBE9E4;
@@ -26,6 +26,7 @@
     /* Accent Colors */
     --accent-blue: #2383E2;
     --accent-blue-hover: #1b6fc4;
+    --accent-blue-text: #156BC1;
     --accent-blue-subtle: rgba(35, 131, 226, 0.08);
 
     /* Status & Tag Colors */
@@ -92,8 +93,9 @@
 
     --text-primary: #FAF8F5;
     --text-secondary: #B4B2AD;
-    --text-muted: #85837E;
+    --text-muted: #A3A19C;
     --text-light: #161514;
+    --accent-blue-text: #6CB4F8;
 
     --border-color: #33322F;
     --border-subtle: #2A2926;
@@ -188,7 +190,7 @@ input {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--accent-blue);
+    color: var(--accent-blue-text);
     margin-bottom: 12px;
 }
 

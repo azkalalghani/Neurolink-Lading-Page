@@ -251,6 +251,7 @@
       type: 'email',
       className: 'hero-input',
       placeholder: 'Enter your work email',
+      'aria-label': 'Work email address',
       required: true
     });
 
@@ -352,6 +353,7 @@
       className: 'key-badge',
       style: { width: '100%', padding: '7px 10px', marginTop: '10px' },
       placeholder: 'Type / to test command palette...',
+      'aria-label': 'Command palette shortcut demo',
       oninput: (e) => {
         if (e.target.value.includes('/')) {
           showToast('⚡ Command palette triggered: [/todo, /date, /flag, /page]');
@@ -563,6 +565,7 @@
         const deleteBtn = el('button', {
           className: 'task-delete-btn',
           title: 'Delete task',
+          'aria-label': 'Delete task',
           onclick: () => {
             tasks = tasks.filter(t => t.id !== task.id);
             renderTasks();
@@ -593,6 +596,7 @@
       type: 'text',
       className: 'add-task-input',
       placeholder: "Type a task and hit Enter (e.g. 'Audit contrast ratios')...",
+      'aria-label': 'Add new interactive task',
       onkeydown: (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1278,12 +1282,653 @@
   }
 
   // ==========================================================================
-  // 12. APP INITIALIZATION & DOM MOUNTING
+  // 12. NON-DESTRUCTIVE HYDRATION & EVENT ATTACHMENT
+  // Attaches event listeners directly to the pre-rendered HTML in index.html
+  // NEVER detaches or replaces #app, completely preventing NO_LCP error & mobile CPU stall
   // ==========================================================================
+
+  function hydrateHeader(app) {
+    const toggleBtn = app.querySelector('.mobile-menu-toggle');
+    const drawer = app.querySelector('.mobile-nav-drawer');
+    let mobileOpen = false;
+
+    if (toggleBtn && drawer) {
+      function toggleMobile(open) {
+        mobileOpen = open;
+        drawer.classList.toggle('open', mobileOpen);
+        toggleBtn.innerHTML = '';
+        toggleBtn.appendChild(svgIcon(mobileOpen ? 'close' : 'menu', 20));
+      }
+
+      toggleBtn.onclick = () => toggleMobile(!mobileOpen);
+
+      drawer.querySelectorAll('a, button').forEach(item => {
+        item.addEventListener('click', () => toggleMobile(false));
+      });
+    }
+
+    app.querySelectorAll('.nav-actions .btn-primary, .mobile-btn.btn-primary').forEach(btn => {
+      btn.onclick = () => {
+        const emailInput = app.querySelector('.hero-input');
+        if (emailInput) {
+          emailInput.focus();
+          emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          showToast('Welcome to Neurolink! Enter your email to begin.');
+        }
+      };
+    });
+
+    app.querySelectorAll('.nav-actions .btn-ghost, .mobile-btn.btn-ghost').forEach(btn => {
+      btn.onclick = () => showToast('Opening login portal...');
+    });
+  }
+
+  function hydrateHero(app) {
+    const form = app.querySelector('.hero-form');
+    const emailInput = app.querySelector('.hero-input');
+    if (form && emailInput) {
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if (email) {
+          showToast(`🚀 Free workspace link sent to ${email}`);
+          emailInput.value = '';
+        }
+      };
+    }
+  }
+
+  function hydrateBento(app) {
+    const bentoSection = app.querySelector('.bento-section');
+    if (!bentoSection) return;
+
+    const miniContentArea = bentoSection.querySelector('.mini-kanban-row');
+    const viewBtns = bentoSection.querySelectorAll('.view-btn');
+
+    function renderMiniView(viewType) {
+      if (!miniContentArea) return;
+      miniContentArea.innerHTML = '';
+      if (viewType === 'board') {
+        miniContentArea.className = 'mini-kanban-row';
+        miniContentArea.style.display = '';
+        miniContentArea.style.flexDirection = '';
+        miniContentArea.style.gridTemplateColumns = '';
+        miniContentArea.append(
+          el('div', { className: 'mini-col' },
+            el('div', { className: 'mini-col-header' }, 'To Do', '2'),
+            el('div', { className: 'mini-card' }, 'Mobile viewport...'),
+            el('div', { className: 'mini-card' }, 'Copy draft for hero')
+          ),
+          el('div', { className: 'mini-col' },
+            el('div', { className: 'mini-col-header' }, 'In Progress', '1'),
+            el('div', { className: 'mini-card' }, 'SAML SSO config')
+          ),
+          el('div', { className: 'mini-col' },
+            el('div', { className: 'mini-col-header' }, 'Complete', '3'),
+            el('div', { className: 'mini-card', style: { textDecoration: 'line-through', opacity: '0.7' } }, 'Design system spec')
+          )
+        );
+      } else if (viewType === 'list') {
+        miniContentArea.className = '';
+        miniContentArea.style.display = 'flex';
+        miniContentArea.style.flexDirection = 'column';
+        miniContentArea.style.gap = '6px';
+        [
+          'Mobile viewport fixes [High]',
+          'Copy draft for hero section [Medium]',
+          'SAML SSO configuration [In Review]',
+          'Design system spec documentation [Completed]'
+        ].forEach(item => {
+          miniContentArea.appendChild(
+            el('div', { className: 'mini-card', style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+              svgIcon('check', 12), item
+            )
+          );
+        });
+      } else if (viewType === 'calendar') {
+        miniContentArea.className = '';
+        miniContentArea.style.display = 'grid';
+        miniContentArea.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        miniContentArea.style.gap = '6px';
+        ['Mon 16', 'Tue 17', 'Wed 18', 'Thu 19'].forEach((day, i) => {
+          miniContentArea.appendChild(
+            el('div', { className: 'mini-col', style: { textAlign: 'center', padding: '6px' } },
+              el('strong', { style: { fontSize: '10px' } }, day),
+              el('div', { className: 'mini-card', style: { fontSize: '9px', marginTop: '4px' } }, i === 1 ? 'Sprint End' : '2 tasks')
+            )
+          );
+        });
+      }
+    }
+
+    viewBtns.forEach(btn => {
+      btn.onclick = () => {
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMiniView(btn.textContent.trim().toLowerCase());
+      };
+    });
+  }
+
+  function hydratePlayground(app) {
+    const playground = app.querySelector('.playground-section');
+    if (!playground) return;
+
+    let tasks = [
+      { id: 1, text: 'Design review with engineering', completed: true },
+      { id: 2, text: 'Implement responsive DOM breakpoints', completed: false },
+      { id: 3, text: 'Deploy to production on Railway', completed: false }
+    ];
+
+    const tasksList = playground.querySelector('.playground-tasks-list');
+    const progressBadge = playground.querySelector('.task-progress-badge');
+    const addInput = playground.querySelector('.add-task-input');
+
+    function updateProgress() {
+      if (!progressBadge) return;
+      const completedCount = tasks.filter(t => t.completed).length;
+      progressBadge.textContent = `${completedCount} of ${tasks.length} tasks completed`;
+    }
+
+    function renderTasks() {
+      if (!tasksList) return;
+      tasksList.innerHTML = '';
+      tasks.forEach(task => {
+        const checkbox = el('div', {
+          className: `task-checkbox ${task.completed ? 'checked' : ''}`,
+          onclick: () => {
+            task.completed = !task.completed;
+            renderTasks();
+            updateProgress();
+            showToast(task.completed ? 'Marked task as completed!' : 'Marked task as pending');
+          }
+        }, task.completed ? svgIcon('check', 12, '#FFFFFF') : null);
+
+        const taskText = el('span', {
+          className: `task-text ${task.completed ? 'completed' : ''}`,
+          onclick: () => {
+            task.completed = !task.completed;
+            renderTasks();
+            updateProgress();
+          }
+        }, task.text);
+
+        const deleteBtn = el('button', {
+          className: 'task-delete-btn',
+          title: 'Delete task',
+          'aria-label': 'Delete task',
+          onclick: () => {
+            tasks = tasks.filter(t => t.id !== task.id);
+            renderTasks();
+            updateProgress();
+            showToast('Task removed');
+          }
+        }, svgIcon('trash', 14));
+
+        const item = el('div', { className: 'playground-task-item' },
+          el('div', { className: 'task-left' }, checkbox, taskText),
+          el('div', { className: 'task-actions' },
+            el('span', {
+              className: `badge-tag ${task.completed ? 'badge-uiux' : 'badge-dev'}`
+            }, task.completed ? 'Done' : 'Active'),
+            deleteBtn
+          )
+        );
+
+        tasksList.appendChild(item);
+      });
+
+      updateProgress();
+    }
+
+    if (tasksList) renderTasks();
+
+    if (addInput) {
+      addInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = addInput.value.trim();
+          if (val) {
+            tasks.push({ id: Date.now(), text: val, completed: false });
+            renderTasks();
+            addInput.value = '';
+            showToast('Added task to interactive list');
+          }
+        }
+      };
+    }
+  }
+
+  function hydratePersona(app) {
+    const personaSection = app.querySelector('.persona-section');
+    if (!personaSection) return;
+
+    const personas = {
+      developer: {
+        tab: 'For Developers',
+        tag: 'Sprint Focus',
+        title: 'Sprint velocity without context switching',
+        desc: 'Pair code snippets with interactive sub-tasks, tag GitHub PRs directly on items, and convert bugs into backlog triage queues.',
+        items: [
+          { icon: 'gitPull', text: 'refactor: optimize token payload in auth middleware', status: 'Merged', statusCls: 'badge-uiux' },
+          { icon: 'flag', text: 'fix(cli): hydration flicker on cold launch', status: 'High Priority', statusCls: 'badge-dev' },
+          { icon: 'file', text: 'Draft architecture memo for edge storage sync', status: 'In Review', statusCls: 'badge-mobile' }
+        ]
+      },
+      designer: {
+        tab: 'For Designers',
+        tag: 'Design Systems',
+        title: 'Figma frames to living design tokens',
+        desc: 'Embed Figma component specs directly alongside token documentation. Track component handoff statuses across releases.',
+        items: [
+          { icon: 'file', text: 'Sync button primitive tokens with Figma Variables', status: 'Done', statusCls: 'badge-uiux' },
+          { icon: 'gitPull', text: 'Color contrast audit for dark theme tokens', status: 'Needs Review', statusCls: 'badge-dev' },
+          { icon: 'flag', text: 'Typography scale alignment with iOS HIG', status: 'In Progress', statusCls: 'badge-mobile' }
+        ]
+      },
+      freelancer: {
+        tab: 'For Freelancers',
+        tag: 'Client Portals',
+        title: 'Transparent deliverables with zero confusion',
+        desc: 'Share live, client-facing views with customized read/write permissions. Track milestone invoices with due dates.',
+        items: [
+          { icon: 'calendar', text: 'Deliver Stage 1 Wireframes to Horizon Health', status: 'Approved', statusCls: 'badge-uiux' },
+          { icon: 'file', text: 'Milestone 2 invoice ($4,800) sent', status: 'Pending', statusCls: 'badge-dev' },
+          { icon: 'flag', text: 'Scope revision memo for user research phase', status: 'Drafting', statusCls: 'badge-mobile' }
+        ]
+      },
+      daily: {
+        tab: 'For Daily Life',
+        tag: 'Personal OS',
+        title: 'Habits, reading lists, and weekend projects',
+        desc: 'A calm space free from noisy notifications. Track personal goals, meal prep, and travel packing lists.',
+        items: [
+          { icon: 'check', text: 'Morning meditation & deep work routine (25 days)', status: 'Streak', statusCls: 'badge-uiux' },
+          { icon: 'file', text: 'Tokyo trip itinerary & train routes', status: 'Active', statusCls: 'badge-mobile' },
+          { icon: 'calendar', text: 'Quarterly financial review & portfolio check', status: 'Upcoming', statusCls: 'badge-dev' }
+        ]
+      }
+    };
+
+    const tabs = personaSection.querySelectorAll('.persona-tab');
+    const cardContainer = personaSection.querySelector('.persona-content-card');
+
+    function renderPersonaCard(key) {
+      if (!cardContainer) return;
+      const p = personas[key];
+      if (!p) return;
+      cardContainer.innerHTML = '';
+
+      const left = el('div', { className: 'persona-info' },
+        el('span', { className: 'persona-tag' }, p.tag),
+        el('h3', { className: 'persona-title' }, p.title),
+        el('p', { className: 'persona-desc' }, p.desc)
+      );
+
+      const right = el('div', { className: 'persona-visual' },
+        p.items.map(item => el('div', { className: 'persona-preview-item' },
+          el('div', { className: 'preview-left' },
+            svgIcon(item.icon, 15, 'var(--text-secondary)'),
+            el('span', {}, item.text)
+          ),
+          el('span', { className: `badge-tag ${item.statusCls}` }, item.status)
+        ))
+      );
+
+      cardContainer.append(left, right);
+    }
+
+    const keys = ['developer', 'designer', 'freelancer', 'daily'];
+    tabs.forEach((tab, i) => {
+      tab.onclick = () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderPersonaCard(keys[i]);
+      };
+    });
+  }
+
+  function hydrateTestimonials(app) {
+    const section = app.querySelector('.testimonials-section');
+    if (!section) return;
+
+    const track = section.querySelector('.testimonials-track');
+    const controls = section.querySelector('.testimonials-controls');
+    if (!track || !controls) return;
+
+    const cardElements = Array.from(track.querySelectorAll('.testimonial-card'));
+    const totalCards = cardElements.length;
+
+    let currentSlide = 0;
+    let autoSwipeInterval = null;
+    let scrollTimeout = null;
+    let userInteracting = false;
+    let isVisible = true;
+    let dots = [];
+    let cardOffsets = [];
+
+    function getVisibleCount() {
+      if (window.innerWidth <= 768) return 1;
+      if (window.innerWidth <= 1024) return 2;
+      return 3;
+    }
+
+    function getTotalSlides() {
+      const visible = getVisibleCount();
+      return Math.ceil(totalCards / visible);
+    }
+
+    function updateActiveDot(slideIdx) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === slideIdx);
+      });
+    }
+
+    function measureOffsets() {
+      if (!cardElements[0] || !track.offsetParent) return;
+      const trackLeft = track.offsetLeft;
+      cardOffsets = cardElements.map(c => c.offsetLeft - trackLeft);
+    }
+
+    function scrollToSlide(slideIdx, smooth = true) {
+      const visible = getVisibleCount();
+      const totalSlides = getTotalSlides();
+      const validSlide = Math.max(0, Math.min(slideIdx, totalSlides - 1));
+      currentSlide = validSlide;
+
+      const targetCardIndex = Math.min(validSlide * visible, totalCards - 1);
+      if (cardOffsets.length === 0) measureOffsets();
+      const targetLeft = cardOffsets[targetCardIndex] || 0;
+
+      track.scrollTo({
+        left: targetLeft,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+      updateActiveDot(validSlide);
+    }
+
+    function renderDots() {
+      controls.innerHTML = '';
+      dots = [];
+      const totalSlides = getTotalSlides();
+
+      if (currentSlide >= totalSlides) {
+        currentSlide = totalSlides - 1;
+      }
+
+      for (let s = 0; s < totalSlides; s++) {
+        const dot = el('button', {
+          className: `testimonial-dot ${s === currentSlide ? 'active' : ''}`,
+          'aria-label': `Go to slide ${s + 1} of ${totalSlides}`,
+          onclick: () => {
+            userInteracting = true;
+            scrollToSlide(s, true);
+            resetCooldown();
+          }
+        });
+        dots.push(dot);
+        controls.appendChild(dot);
+      }
+    }
+
+    renderDots();
+
+    function nextSlide() {
+      const totalSlides = getTotalSlides();
+      const nextSlideIdx = (currentSlide + 1) % totalSlides;
+      scrollToSlide(nextSlideIdx, true);
+    }
+
+    function startAutoSwipe() {
+      stopAutoSwipe();
+      autoSwipeInterval = setInterval(() => {
+        if (!userInteracting && isVisible) {
+          nextSlide();
+        }
+      }, 2500);
+    }
+
+    function stopAutoSwipe() {
+      if (autoSwipeInterval) {
+        clearInterval(autoSwipeInterval);
+        autoSwipeInterval = null;
+      }
+    }
+
+    function resetCooldown() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        userInteracting = false;
+        startAutoSwipe();
+      }, 2500);
+    }
+
+    let scrollRaf = null;
+    track.addEventListener('scroll', () => {
+      userInteracting = true;
+      resetCooldown();
+
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = null;
+        const currentScroll = track.scrollLeft;
+        const visible = getVisibleCount();
+        const totalSlides = getTotalSlides();
+        let closestSlide = 0;
+        let closestDist = Infinity;
+
+        if (cardOffsets.length === 0) measureOffsets();
+
+        for (let s = 0; s < totalSlides; s++) {
+          const targetCardIndex = Math.min(s * visible, totalCards - 1);
+          const targetLeft = cardOffsets[targetCardIndex] || 0;
+          const dist = Math.abs(currentScroll - targetLeft);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestSlide = s;
+          }
+        }
+
+        if (closestSlide !== currentSlide) {
+          currentSlide = closestSlide;
+          updateActiveDot(closestSlide);
+        }
+      });
+    }, { passive: true });
+
+    track.addEventListener('touchstart', () => {
+      userInteracting = true;
+      stopAutoSwipe();
+    }, { passive: true });
+
+    track.addEventListener('touchend', () => {
+      resetCooldown();
+    }, { passive: true });
+
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      userInteracting = true;
+      stopAutoSwipe();
+      startX = e.pageX - track.offsetLeft;
+      scrollStart = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+      track.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDown) {
+        isDown = false;
+        track.style.cursor = '';
+        track.style.removeProperty('user-select');
+        resetCooldown();
+      }
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      track.scrollLeft = scrollStart - walk;
+    });
+
+    track.addEventListener('mouseenter', () => {
+      userInteracting = true;
+      stopAutoSwipe();
+    });
+
+    track.addEventListener('mouseleave', () => {
+      if (!isDown) {
+        userInteracting = false;
+        startAutoSwipe();
+      }
+    });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !userInteracting) {
+            startAutoSwipe();
+          } else {
+            stopAutoSwipe();
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(track);
+    } else {
+      startAutoSwipe();
+    }
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        cardOffsets = [];
+        measureOffsets();
+        renderDots();
+        scrollToSlide(currentSlide, false);
+      }, 100);
+    });
+
+    requestAnimationFrame(() => {
+      measureOffsets();
+    });
+  }
+
+  function hydratePricing(app) {
+    const pricingSection = app.querySelector('.pricing-section');
+    if (!pricingSection) return;
+
+    const monthlyBtn = pricingSection.querySelector('.billing-opt:first-child');
+    const annualBtn = pricingSection.querySelector('.billing-opt:last-child');
+    const proPrice = pricingSection.querySelector('.pricing-card.featured .price-number');
+    const proPeriod = pricingSection.querySelector('.pricing-card.featured .price-period');
+    const teamCard = pricingSection.querySelectorAll('.pricing-card')[2];
+    const teamPrice = teamCard?.querySelector('.price-number');
+    const teamPeriod = teamCard?.querySelector('.price-period');
+
+    let isAnnual = true;
+
+    function updatePrices() {
+      if (monthlyBtn && annualBtn) {
+        monthlyBtn.classList.toggle('active', !isAnnual);
+        annualBtn.classList.toggle('active', isAnnual);
+      }
+      if (proPrice && proPeriod) {
+        proPrice.textContent = isAnnual ? '$8' : '$10';
+        proPeriod.textContent = isAnnual ? '/ month billed annually' : '/ month billed monthly';
+      }
+      if (teamPrice && teamPeriod) {
+        teamPrice.textContent = isAnnual ? '$16' : '$20';
+        teamPeriod.textContent = isAnnual ? '/ seat / month billed annually' : '/ seat / month billed monthly';
+      }
+    }
+
+    if (monthlyBtn) {
+      monthlyBtn.onclick = () => { isAnnual = false; updatePrices(); };
+    }
+    if (annualBtn) {
+      annualBtn.onclick = () => { isAnnual = true; updatePrices(); };
+    }
+
+    pricingSection.querySelectorAll('.btn-pricing-cta').forEach(btn => {
+      btn.onclick = () => {
+        const card = btn.closest('.pricing-card');
+        const tierName = card?.querySelector('.pricing-tier-name')?.textContent || 'selected';
+        showToast(`Selected ${tierName} plan. Redirecting to onboarding...`);
+      };
+    });
+  }
+
+  function hydrateCta(app) {
+    const ctaPrimary = app.querySelector('.cta-btn-primary');
+    const ctaSecondary = app.querySelector('.cta-btn-secondary');
+    if (ctaPrimary) {
+      ctaPrimary.onclick = () => {
+        const emailInput = app.querySelector('.hero-input');
+        if (emailInput) {
+          emailInput.focus();
+          emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      };
+    }
+    if (ctaSecondary) {
+      ctaSecondary.onclick = () => showToast('Opening free template library...');
+    }
+  }
+
+  function hydrateFooter(app) {
+    const toggleBtn = app.querySelector('.theme-toggle-btn');
+    if (!toggleBtn) return;
+
+    let currentTheme = localStorage.getItem('neurolink-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    function updateBtn() {
+      toggleBtn.innerHTML = '';
+      const dot = el('span', { className: 'theme-status-dot' });
+      const text = currentTheme === 'dark' ? 'Dark Mode Active' : 'Light Mode Active';
+      toggleBtn.appendChild(dot);
+      toggleBtn.appendChild(document.createTextNode(text));
+    }
+
+    updateBtn();
+
+    toggleBtn.onclick = () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('neurolink-theme', currentTheme);
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      updateBtn();
+      showToast(`Switched to ${currentTheme} theme`);
+    };
+  }
 
   function initApp() {
     const existingApp = document.getElementById('app');
 
+    // If pre-rendered HTML exists in index.html, attach event listeners directly
+    // WITHOUT replacing or detaching the DOM (prevents NO_LCP error and avoids mobile CPU overhead)
+    if (existingApp && existingApp.children.length > 0) {
+      hydrateHeader(existingApp);
+      hydrateHero(existingApp);
+      hydrateBento(existingApp);
+      hydratePlayground(existingApp);
+      hydratePersona(existingApp);
+      hydrateTestimonials(existingApp);
+      hydratePricing(existingApp);
+      hydrateCta(existingApp);
+      hydrateFooter(existingApp);
+      return;
+    }
+
+    // Dynamic mount fallback (if body was empty)
+    document.body.innerHTML = '';
     const rootContainer = el('div', { id: 'app', className: 'app-root' },
       createHeader(),
       createHeroSection(),
@@ -1297,11 +1942,7 @@
       createFooter()
     );
 
-    if (existingApp) {
-      existingApp.replaceWith(rootContainer);
-    } else {
-      document.body.appendChild(rootContainer);
-    }
+    document.body.appendChild(rootContainer);
   }
 
   // Run initialization on DOM ready
