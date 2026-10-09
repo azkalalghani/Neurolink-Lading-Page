@@ -8,18 +8,28 @@
     <meta name="description"
         content="Escape rigid to-do apps. Combine fluid markdown notes, draggable block checklists, and multi-view databases inside a single, calm workspace.">
     <link rel="icon" type="image/png" href="assets/logo.png">
+
+    <!-- Preload LCP Hero Image for Instant Paint -->
+    <link rel="preload" fetchpriority="high" as="image" href="assets/Task Management Dashboard (Board).webp" type="image/webp">
+
+    <!-- Preconnect & Non-blocking Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap">
+    <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap">
+    </noscript>
 
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <!-- Stylesheet with Cache Busting Version -->
+    <link rel="stylesheet" href="style.css?v=1.1">
 
-    <script src="script.js" defer></script>
+    <!-- Application Logic -->
+    <script src="script.js?v=1.1" defer></script>
 </head>
 
 <body>

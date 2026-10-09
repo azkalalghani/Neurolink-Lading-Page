@@ -229,15 +229,19 @@
 
   function createHeroDashboardImage() {
     return el('div', { className: 'hero-dashboard-frame' },
-      el('img', {
-        src: 'assets/hero-dashboard.png',
-        alt: 'Neurolink Task Management Dashboard',
-        className: 'hero-dashboard-img',
-        loading: 'eager',
-        decoding: 'async',
-        width: 1152,
-        height: 615
-      })
+      el('picture', {},
+        el('source', { srcset: 'assets/Task Management Dashboard (Board).webp', type: 'image/webp' }),
+        el('img', {
+          src: 'assets/Task Management Dashboard (Board).webp',
+          alt: 'Neurolink Task Management Dashboard',
+          className: 'hero-dashboard-img',
+          loading: 'eager',
+          decoding: 'async',
+          fetchpriority: 'high',
+          width: 1152,
+          height: 615
+        })
+      )
     );
   }
 
@@ -801,6 +805,7 @@
     let userInteracting = false;
     let isVisible = true;
     let dots = [];
+    let cardOffsets = [];
 
     const controls = el('div', { className: 'testimonials-controls' });
 
@@ -821,6 +826,12 @@
       });
     }
 
+    function measureOffsets() {
+      if (!cardElements[0] || !track.offsetParent) return;
+      const trackLeft = track.offsetLeft;
+      cardOffsets = cardElements.map(c => c.offsetLeft - trackLeft);
+    }
+
     function scrollToSlide(slideIdx, smooth = true) {
       const visible = getVisibleCount();
       const totalSlides = getTotalSlides();
@@ -828,10 +839,9 @@
       currentSlide = validSlide;
 
       const targetCardIndex = Math.min(validSlide * visible, reviews.length - 1);
-      const targetCard = cardElements[targetCardIndex];
-      if (!targetCard) return;
+      if (cardOffsets.length === 0) measureOffsets();
+      const targetLeft = cardOffsets[targetCardIndex] || 0;
 
-      const targetLeft = targetCard.offsetLeft - track.offsetLeft;
       track.scrollTo({
         left: targetLeft,
         behavior: smooth ? 'smooth' : 'auto'
@@ -901,31 +911,38 @@
       }, 2500);
     }
 
-    // Pause when user is scrolling the track & update active slide dot
+    // Throttled scroll listener using cached offsets to prevent forced reflows
+    let scrollRaf = null;
     track.addEventListener('scroll', () => {
-      const currentScroll = track.scrollLeft;
-      const visible = getVisibleCount();
-      const totalSlides = getTotalSlides();
-      let closestSlide = 0;
-      let closestDist = Infinity;
-
-      for (let s = 0; s < totalSlides; s++) {
-        const targetCardIndex = Math.min(s * visible, reviews.length - 1);
-        const targetLeft = cardElements[targetCardIndex].offsetLeft - track.offsetLeft;
-        const dist = Math.abs(currentScroll - targetLeft);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestSlide = s;
-        }
-      }
-
-      if (closestSlide !== currentSlide) {
-        currentSlide = closestSlide;
-        updateActiveDot(closestSlide);
-      }
-
       userInteracting = true;
       resetCooldown();
+
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = null;
+        const currentScroll = track.scrollLeft;
+        const visible = getVisibleCount();
+        const totalSlides = getTotalSlides();
+        let closestSlide = 0;
+        let closestDist = Infinity;
+
+        if (cardOffsets.length === 0) measureOffsets();
+
+        for (let s = 0; s < totalSlides; s++) {
+          const targetCardIndex = Math.min(s * visible, reviews.length - 1);
+          const targetLeft = cardOffsets[targetCardIndex] || 0;
+          const dist = Math.abs(currentScroll - targetLeft);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestSlide = s;
+          }
+        }
+
+        if (closestSlide !== currentSlide) {
+          currentSlide = closestSlide;
+          updateActiveDot(closestSlide);
+        }
+      });
     }, { passive: true });
 
     // Touch events for mobile
@@ -951,12 +968,14 @@
     let isMouseDown = false;
     let startX = 0;
     let scrollStart = 0;
+    let cachedTrackLeft = 0;
 
     track.addEventListener('mousedown', (e) => {
       isMouseDown = true;
       userInteracting = true;
       stopAutoSwipe();
-      startX = e.pageX - track.offsetLeft;
+      cachedTrackLeft = track.offsetLeft;
+      startX = e.pageX - cachedTrackLeft;
       scrollStart = track.scrollLeft;
     });
 
@@ -970,23 +989,29 @@
     track.addEventListener('mousemove', (e) => {
       if (!isMouseDown) return;
       e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
+      const x = e.pageX - cachedTrackLeft;
       const walk = (x - startX) * 1.5;
       track.scrollLeft = scrollStart - walk;
     });
 
-    // Window resize listener to recompute dots if viewport width changes
+    // Window resize listener: recompute cached offsets and dots
     let resizeTimer = null;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
+        measureOffsets();
         renderDots();
         scrollToSlide(currentSlide, false);
       }, 150);
     });
 
-    // Start auto-swipe timer
-    startAutoSwipe();
+    // Delay initial measurements past first frame to avoid forced reflow
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        measureOffsets();
+        startAutoSwipe();
+      }, 50);
+    });
 
     // IntersectionObserver to pause when offscreen
     if ('IntersectionObserver' in window) {
