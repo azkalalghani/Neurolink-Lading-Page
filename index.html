@@ -12,27 +12,593 @@
     <!-- Preload LCP Hero Image for Instant Paint -->
     <link rel="preload" fetchpriority="high" as="image" href="assets/hero-picture.webp" type="image/webp">
 
-    <!-- Preconnect & Non-blocking Google Fonts -->
+    <!-- Preconnect & Non-blocking Optimized Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap"
         media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500;1,6..72,600&display=swap">
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@1,6..72,400&display=swap">
     </noscript>
 
+    <!-- Theme Initialization Script (Prevents flash of unstyled theme) -->
+    <script>
+        (function () {
+            try {
+                var theme = localStorage.getItem('neurolink-theme');
+                if (theme) document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) { }
+        })();
+    </script>
+
     <!-- Stylesheet with Cache Busting Version -->
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.2">
 
     <!-- Application Logic -->
-    <script src="script.js?v=1.1" defer></script>
+    <script src="script.js?v=1.2" defer></script>
 </head>
 
 <body>
+    <div class="app-root" id="app">
+        <header class="top-navbar">
+            <div class="nav-inner"><a class="nav-brand" href="#"><img class="nav-logo-img" src="assets/logo.png"
+                        alt="Neurolink" width="28" height="28"><span>Neurolink</span></a>
+                <nav class="nav-links"><a class="nav-link" href="#features">Features</a><a class="nav-link"
+                        href="#views">Views</a><a class="nav-link" href="#workflows">Workflows</a><a class="nav-link"
+                        href="#pricing">Pricing</a></nav>
+                <div class="nav-actions"><button class="btn-ghost">Log in</button><button class="btn-primary">Get
+                        Started</button><button class="mobile-menu-toggle" aria-label="Toggle navigation menu"><span
+                            class="icon-svg-wrapper"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="12" x2="21" y2="12" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <line x1="3" y1="18" x2="21" y2="18" />
+                            </svg></span></button></div>
+            </div>
+            <div class="mobile-nav-drawer"><a class="mobile-nav-link" href="#features">Features</a><a
+                    class="mobile-nav-link" href="#views">Views</a><a class="mobile-nav-link"
+                    href="#workflows">Workflows</a><a class="mobile-nav-link" href="#pricing">Pricing</a>
+                <div class="mobile-nav-divider"></div><button class="btn-ghost mobile-btn">Log in</button><button
+                    class="btn-primary mobile-btn">Get Started</button>
+            </div>
+        </header>
+        <section class="hero-section">
+            <h1 class="hero-heading">Your tasks, notes, and workflows.<span class="hero-editorial">Structured your
+                    way.</span></h1>
+            <p class="hero-subhead">Escape rigid to-do apps. Combine fluid markdown notes, draggable block checklists,
+                and multi-view databases inside a single, calm workspace.</p>
+            <div class="hero-form-wrapper">
+                <form class="hero-form"><input class="hero-input" type="email" placeholder="Enter your work email"
+                        required><button class="hero-submit" type="submit">Start Free Workspace</button></form>
+            </div>
+            <div class="hero-trust-row">
+                <div class="trust-item">Free forever for individuals</div><span class="trust-dot"></span>
+                <div class="trust-item">No credit card required</div><span class="trust-dot"></span>
+                <div class="trust-item">Real-time sync</div>
+            </div>
+            <div class="hero-dashboard-container">
+                <div class="hero-dashboard-frame">
+                    <picture>
+                        <source srcset="assets/hero-picture.webp" type="image/webp"><img class="hero-dashboard-img"
+                            src="assets/hero-picture.webp" alt="Neurolink Task Management Dashboard" loading="eager"
+                            decoding="async" fetchpriority="high" width="1152" height="615">
+                    </picture>
+                </div>
+            </div>
+        </section>
+        <section class="trust-strip-section">
+            <div class="container">
+                <div class="trust-strip-label">TRUSTED BY 40,000+ MAKERS, DESIGNERS, AND ENGINEERING TEAMS</div>
+                <div class="trust-logos">
+                    <div class="trust-logo-item"><span>Linear</span></div>
+                    <div class="trust-logo-item"><span>Raycast</span></div>
+                    <div class="trust-logo-item"><span>Vercel</span></div>
+                    <div class="trust-logo-item"><span>Supabase</span></div>
+                    <div class="trust-logo-item"><span>Loom</span></div>
+                </div>
+            </div>
+        </section>
+        <section class="bento-section" id="features">
+            <div class="bento-header"><span class="section-tag">MODULAR ARCHITECTURE</span>
+                <h2 class="section-title">Built like building blocks. Flexible like paper.</h2>
+                <p class="section-desc">Everything in Neurolink is an atomic block. Turn notes into action items, and
+                    checklists into multi-column Kanban pipelines in two keystrokes.</p>
+            </div>
+            <div class="bento-grid">
+                <div class="bento-card">
+                    <div class="bento-card-header"><span class="bento-card-tag">Block System</span>
+                        <h3 class="bento-card-title">Everything is a drag-and-drop block</h3>
+                        <p class="bento-card-desc">Nest checklists, embed markdown code blocks, or convert any paragraph
+                            into an actionable task with its own due date and assignee.</p>
+                    </div>
+                    <div class="bento-drag-demo">
+                        <div class="drag-item"><span>1. Prototype user onboarding journey</span><span
+                                class="badge-tag badge-uiux">In Design</span></div>
+                        <div class="drag-ghost"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                    viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg></span>Drop block to reorganize priority</div>
+                        <div class="drag-item"><span>2. Architecture review with engineering</span><span
+                                class="badge-tag badge-dev">Review</span></div>
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="bento-card-header"><span class="bento-card-tag">Keyboard Speed</span>
+                        <h3 class="bento-card-title">Slash commands at thought speed</h3>
+                        <p class="bento-card-desc">Press "/" to summon checklists, deadlines, priority flags, or
+                            sub-pages instantly.</p>
+                    </div>
+                    <div class="bento-slash-demo">
+                        <div class="slash-row-header"><span>Action</span><span>Shortcut</span></div>
+                        <div class="slash-row">
+                            <div class="slash-row-left"><span class="icon-svg-wrapper"><svg width="13" height="13"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span>Checklist</div><span class="key-badge">/todo</span>
+                        </div>
+                        <div class="slash-row">
+                            <div class="slash-row-left"><span class="icon-svg-wrapper"><svg width="13" height="13"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg></span>Deadline</div><span class="key-badge">/date</span>
+                        </div>
+                        <div class="slash-row">
+                            <div class="slash-row-left"><span class="icon-svg-wrapper"><svg width="13" height="13"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                                        <line x1="4" y1="22" x2="4" y2="15" />
+                                    </svg></span>Priority</div><span class="key-badge">/flag</span>
+                        </div>
+                        <div class="slash-row">
+                            <div class="slash-row-left"><span class="icon-svg-wrapper"><svg width="13" height="13"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg></span>Sub-page</div><span class="key-badge">/page</span>
+                        </div><input class="key-badge" type="text" placeholder="Type / to test command palette...">
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="bento-card-header"><span class="bento-card-tag">Metadata</span>
+                        <h3 class="bento-card-title">Rich, customizable properties</h3>
+                        <p class="bento-card-desc">Assign multi-select tags, estimate hours, set recurrence, or attach
+                            contextual files.</p>
+                    </div>
+                    <div class="bento-props-demo">
+                        <div class="prop-box">
+                            <div class="prop-label">Customize Tags</div>
+                            <div class="prop-tags-row"><span class="badge-tag badge-dev">Development</span><span
+                                    class="badge-tag badge-uiux">UI/UX</span><span
+                                    class="badge-tag badge-mobile">Mobile</span><span
+                                    class="badge-tag badge-dev">Frontend</span><span
+                                    class="badge-tag badge-uiux">Research</span></div>
+                        </div>
+                        <div class="prop-box">
+                            <div class="prop-label">Deadlines & Timing</div>
+                            <div>
+                                <div class="deadline-pill"><span class="icon-svg-wrapper"><svg width="12" height="12"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 22h14" />
+                                            <path d="M5 2h14" />
+                                            <path
+                                                d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+                                            <path
+                                                d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
+                                        </svg></span>5 hours left</div>
+                                <div class="deadline-pill"><span class="icon-svg-wrapper"><svg width="12" height="12"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg></span>12 / 04 / 2026</div>
+                                <div class="deadline-pill"><span class="icon-svg-wrapper"><svg width="12" height="12"
+                                            viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                                            <line x1="4" y1="22" x2="4" y2="15" />
+                                        </svg></span>Sprint Cycle</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-card">
+                    <div class="bento-card-header"><span class="bento-card-tag">Databases</span>
+                        <h3 class="bento-card-title">One database. Unlimited visual views.</h3>
+                        <p class="bento-card-desc">Switch seamlessly from a clean checklist to an agile Kanban board or
+                            a timeline calendar without re-entering your tasks.</p>
+                    </div>
+                    <div class="bento-views-demo">
+                        <div class="view-switcher-bar"><button class="view-btn ">List</button><button
+                                class="view-btn active">Board</button><button class="view-btn ">Calendar</button></div>
+                        <div class="mini-kanban-row">
+                            <div class="mini-col">
+                                <div class="mini-col-header">To Do2</div>
+                                <div class="mini-card">Mobile viewport...</div>
+                                <div class="mini-card">Copy draft for hero</div>
+                            </div>
+                            <div class="mini-col">
+                                <div class="mini-col-header">In Progress1</div>
+                                <div class="mini-card">SAML SSO config</div>
+                            </div>
+                            <div class="mini-col">
+                                <div class="mini-col-header">Complete3</div>
+                                <div class="mini-card">Design system spec</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="playground-section" id="views">
+            <div class="playground-card">
+                <div class="playground-header">
+                    <div>
+                        <h3 class="playground-title">Test Drive Neurolink Right Here</h3>
+                        <p class="playground-subtitle">Click checkboxes, type new items, or switch views below. No
+                            sign-up needed.</p>
+                    </div><span class="task-progress-badge">1 of 3 tasks completed</span>
+                </div>
+                <div class="playground-tasks-list">
+                    <div class="playground-task-item">
+                        <div class="task-left">
+                            <div class="task-checkbox checked"><span class="icon-svg-wrapper"><svg width="12"
+                                        height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span></div><span class="task-text completed">Design review with
+                                engineering</span>
+                        </div>
+                        <div class="task-actions"><span class="badge-tag badge-uiux">Done</span><button
+                                class="task-delete-btn" title="Delete task"><span class="icon-svg-wrapper"><svg
+                                        width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg></span></button></div>
+                    </div>
+                    <div class="playground-task-item">
+                        <div class="task-left">
+                            <div class="task-checkbox "></div><span class="task-text ">Implement responsive DOM
+                                breakpoints</span>
+                        </div>
+                        <div class="task-actions"><span class="badge-tag badge-dev">Active</span><button
+                                class="task-delete-btn" title="Delete task"><span class="icon-svg-wrapper"><svg
+                                        width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg></span></button></div>
+                    </div>
+                    <div class="playground-task-item">
+                        <div class="task-left">
+                            <div class="task-checkbox "></div><span class="task-text ">Deploy to production on
+                                Railway</span>
+                        </div>
+                        <div class="task-actions"><span class="badge-tag badge-dev">Active</span><button
+                                class="task-delete-btn" title="Delete task"><span class="icon-svg-wrapper"><svg
+                                        width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                    </svg></span></button></div>
+                    </div>
+                </div>
+                <div class="add-task-row"><span class="add-task-icon"><span class="icon-svg-wrapper"><svg width="16"
+                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg></span></span><input class="add-task-input" type="text"
+                        placeholder="Type a task and hit Enter (e.g. 'Audit contrast ratios')..."></div>
+            </div>
+        </section>
+        <section class="persona-section" id="workflows">
+            <div class="persona-header"><span class="section-tag">ADAPTABLE WORKFLOWS</span>
+                <h2 class="section-title">Designed for whoever you are today</h2>
+                <p class="section-desc">No rigid paradigms. Whether you code systems, craft visuals, manage clients, or
+                    organize home projects.</p>
+            </div>
+            <div class="persona-tabs"><button class="persona-tab active">For Developers</button><button
+                    class="persona-tab ">For Designers</button><button class="persona-tab ">For
+                    Freelancers</button><button class="persona-tab ">For Daily Life</button></div>
+            <div class="persona-content-card">
+                <div class="persona-info"><span class="persona-tag">Sprint Focus</span>
+                    <h3 class="persona-title">Sprint velocity without context switching</h3>
+                    <p class="persona-desc">Pair code snippets with interactive sub-tasks, tag GitHub PRs directly on
+                        items, and convert bugs into backlog triage queues.</p>
+                </div>
+                <div class="persona-visual">
+                    <div class="persona-preview-item">
+                        <div class="preview-left"><span class="icon-svg-wrapper"><svg width="15" height="15"
+                                    viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="18" cy="18" r="3" />
+                                    <circle cx="6" cy="6" r="3" />
+                                    <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+                                    <line x1="6" y1="9" x2="6" y2="21" />
+                                </svg></span><span>refactor: optimize token payload in auth middleware</span></div><span
+                            class="badge-tag badge-uiux">Merged</span>
+                    </div>
+                    <div class="persona-preview-item">
+                        <div class="preview-left"><span class="icon-svg-wrapper"><svg width="15" height="15"
+                                    viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                                    <line x1="4" y1="22" x2="4" y2="15" />
+                                </svg></span><span>fix(cli): hydration flicker on cold launch</span></div><span
+                            class="badge-tag badge-dev">High Priority</span>
+                    </div>
+                    <div class="persona-preview-item">
+                        <div class="preview-left"><span class="icon-svg-wrapper"><svg width="15" height="15"
+                                    viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg></span><span>Draft architecture memo for edge storage sync</span></div><span
+                            class="badge-tag badge-mobile">In Review</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="testimonials-section"><span class="section-tag">WALL OF LOVE</span>
+            <h2 class="section-title">Loved by people who think in structure</h2>
+            <div class="testimonials-carousel-wrapper">
+                <div class="testimonials-track">
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“Neurolink replaced three separate apps: my scratchpad notes,
+                            Todoist, and Trello boards. The slash command flow lets me plan sprints without leaving the
+                            keyboard.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/avatar1.png"
+                                alt="Arjun Kapoor" loading="lazy">
+                            <div>
+                                <div class="author-name">Arjun Kapoor</div>
+                                <div class="author-role">Staff Engineer, VectorFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“The typography and warm paper tones make it feel like writing in a
+                            Midori journal, but with instantaneous multi-view database capabilities.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/avatar2.png"
+                                alt="Elena Lindqvist" loading="lazy">
+                            <div>
+                                <div class="author-name">Elena Lindqvist</div>
+                                <div class="author-role">Principal Designer, Studio Form</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“The lack of bloated features is the feature. Everything is an
+                            atomic block. My client delivery tracking has never felt this calm and systematic.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/avatar3.png"
+                                alt="Marcus Vance" loading="lazy">
+                            <div>
+                                <div class="author-name">Marcus Vance</div>
+                                <div class="author-role">Independent Systems Consultant</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“The block nesting combined with clean markdown export is a game
+                            changer for technical specs, backlog grooming, and system architecture.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/josh.png"
+                                alt="Josh Miller" loading="lazy">
+                            <div>
+                                <div class="author-name">Josh Miller</div>
+                                <div class="author-role">Head of Product, NorthStar</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“We ditched our bloated enterprise wiki and migrated our entire
+                            roadmap here in an afternoon. Fast, offline-ready, and calm.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/user1.png"
+                                alt="Sarah Chen" loading="lazy">
+                            <div>
+                                <div class="author-name">Sarah Chen</div>
+                                <div class="author-role">Founder, HyperScale Studio</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">“Finally an editor that respects pure speed. Keyboard navigation is
+                            instantaneous and real-time sync never conflicts.”</p>
+                        <div class="testimonial-author"><img class="testimonial-avatar" src="assets/user2.png"
+                                alt="David Park" loading="lazy">
+                            <div>
+                                <div class="author-name">David Park</div>
+                                <div class="author-role">Engineering Lead, Kernel Labs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonials-controls"><button class="testimonial-dot active"
+                        aria-label="Go to slide 1 of 2"></button><button class="testimonial-dot "
+                        aria-label="Go to slide 2 of 2"></button></div>
+            </div>
+        </section>
+        <section class="pricing-section" id="pricing">
+            <div class="pricing-header"><span class="section-tag">PRICING</span>
+                <h2 class="section-title">Start free. Upgrade when you scale.</h2>
+                <p class="section-desc">No credit card needed to begin. Straightforward tiers with no hidden usage
+                    limits.</p>
+            </div>
+            <div class="pricing-billing-toggle"><button class="billing-opt ">Monthly</button><button
+                    class="billing-opt active">Annual<span class="discount-tag">Save 20%</span></button></div>
+            <div class="pricing-grid">
+                <div class="pricing-card ">
+                    <div>
+                        <h3 class="pricing-tier-name">Individual</h3>
+                        <div class="pricing-price-row"><span class="price-number">$0</span><span class="price-period">/
+                                forever</span></div>
+                        <p class="pricing-desc">Perfect for daily tasks and personal life organization.</p>
+                        <ul class="pricing-features-list">
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Unlimited blocks & checklists</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Board, List, and Calendar views</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>5 MB file uploads</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>7-day revision history</span></li>
+                        </ul>
+                    </div><button class="btn-pricing-cta">Get Started Free</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="featured-pill">MOST POPULAR</div>
+                    <div>
+                        <h3 class="pricing-tier-name">Pro</h3>
+                        <div class="pricing-price-row"><span class="price-number">$8</span><span class="price-period">/
+                                month billed annually</span></div>
+                        <p class="pricing-desc">For power users who need deep search, recurring logic, and AI
+                            breakdowns.</p>
+                        <ul class="pricing-features-list">
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Everything in Individual</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Unlimited file uploads</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Automated recurring subtasks</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>AI Task Decomposer & Summarizer</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>30-day version history</span></li>
+                        </ul>
+                    </div><button class="btn-pricing-cta">Start 14-Day Pro Trial</button>
+                </div>
+                <div class="pricing-card ">
+                    <div>
+                        <h3 class="pricing-tier-name">Team</h3>
+                        <div class="pricing-price-row"><span class="price-number">$16</span><span class="price-period">/
+                                seat / month billed annually</span></div>
+                        <p class="pricing-desc">For micro-studios and agile squads managing deliverables together.</p>
+                        <ul class="pricing-features-list">
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Everything in Pro</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Shared team workspaces & permissions</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Real-time multi-cursor collaboration</span></li>
+                            <li class="feature-item"><span class="icon-svg-wrapper"><svg width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg></span><span>Admin controls & SAML SSO</span></li>
+                        </ul>
+                    </div><button class="btn-pricing-cta">Contact Sales</button>
+                </div>
+            </div>
+        </section>
+        <section class="cta-banner-section">
+            <div class="cta-banner-card">
+                <div class="cta-banner-text">
+                    <h2 class="cta-banner-title">Ready for a calmer, clearer workspace?</h2>
+                    <p class="cta-banner-sub">Join over 40,000 makers organizing their lives with modular clarity.</p>
+                </div>
+                <div class="cta-banner-actions"><button class="cta-btn-primary">Create Your Workspace</button><button
+                        class="cta-btn-secondary">Explore Free Templates →</button></div>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-top-grid">
+                    <div class="footer-brand-col">
+                        <div class="footer-brand-title"><img class="nav-logo-img" src="assets/logo.png" alt="Neurolink"
+                                width="26" height="26"><span>Neurolink</span></div>
+                        <p class="footer-brand-desc">Modular productivity built for focused thinkers. Craft quiet
+                            systems for work and life.</p>
+                    </div>
+                    <div>
+                        <h4 class="footer-col-heading">Product</h4>
+                        <ul class="footer-links-list">
+                            <li><a class="footer-link" href="#features">Features</a></li>
+                            <li><a class="footer-link" href="#views">Views</a></li>
+                            <li><a class="footer-link" href="#pricing">Pricing</a></li>
+                            <li><a class="footer-link" href="#">Roadmap</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="footer-col-heading">Resources</h4>
+                        <ul class="footer-links-list">
+                            <li><a class="footer-link" href="#">Documentation</a></li>
+                            <li><a class="footer-link" href="#">Templates</a></li>
+                            <li><a class="footer-link" href="#">Community</a></li>
+                            <li><a class="footer-link" href="#">Manifesto</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="footer-col-heading">Company</h4>
+                        <ul class="footer-links-list">
+                            <li><a class="footer-link" href="#">About</a></li>
+                            <li><a class="footer-link" href="#">Careers</a></li>
+                            <li><a class="footer-link" href="#">Privacy Policy</a></li>
+                            <li><a class="footer-link" href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div>© 2025 Kanso Technologies Inc. Crafted for quiet focus.</div><button
+                        class="theme-toggle-btn"><span class="theme-status-dot"></span><span>Light Mode
+                            Active</span></button>
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 
 </html>

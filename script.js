@@ -1282,8 +1282,7 @@
   // ==========================================================================
 
   function initApp() {
-    // Ensure body is clean before mounting
-    document.body.innerHTML = '';
+    const existingApp = document.getElementById('app');
 
     const rootContainer = el('div', { id: 'app', className: 'app-root' },
       createHeader(),
@@ -1298,7 +1297,11 @@
       createFooter()
     );
 
-    document.body.appendChild(rootContainer);
+    if (existingApp) {
+      existingApp.replaceWith(rootContainer);
+    } else {
+      document.body.appendChild(rootContainer);
+    }
   }
 
   // Run initialization on DOM ready
