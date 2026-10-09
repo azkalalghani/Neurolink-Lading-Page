@@ -230,9 +230,9 @@
   function createHeroDashboardImage() {
     return el('div', { className: 'hero-dashboard-frame' },
       el('picture', {},
-        el('source', { srcset: 'assets/Task Management Dashboard (Board).webp', type: 'image/webp' }),
+        el('source', { srcset: 'assets/hero-picture.webp', type: 'image/webp' }),
         el('img', {
-          src: 'assets/Task Management Dashboard (Board).webp',
+          src: 'assets/hero-picture.webp',
           alt: 'Neurolink Task Management Dashboard',
           className: 'hero-dashboard-img',
           loading: 'eager',
