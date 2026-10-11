@@ -578,11 +578,12 @@
                 }, svgIcon('trash', 14));
 
                 const item = el('div', { className: 'playground-task-item' },
-                    el('div', { className: 'task-left' }, checkbox, taskText),
+                    el('div', { className: 'task-left' },
+                        el('span', { className: 'drag-dots' }, '⋮⋮'),
+                        checkbox,
+                        taskText
+                    ),
                     el('div', { className: 'task-actions' },
-                        el('span', {
-                            className: `badge-tag ${task.completed ? 'badge-uiux' : 'badge-dev'}`
-                        }, task.completed ? 'Done' : 'Active'),
                         deleteBtn
                     )
                 );
@@ -1277,7 +1278,7 @@
 
                 // Bottom Bar
                 el('div', { className: 'footer-bottom' },
-                    el('div', {}, '© 2025 Kanso Technologies Inc. Crafted for quiet focus.'),
+                    el('div', {}, '© 2025 Neurolink Technologies Inc. Crafted for quiet focus.'),
                     themeToggleBtn
                 )
             )
@@ -1476,10 +1477,6 @@
                         taskText
                     ),
                     el('div', { className: 'task-actions' },
-                        el('span', { className: 'status-pill' },
-                            el('span', { className: 'dot-orange' }),
-                            'Complete'
-                        ),
                         deleteBtn
                     )
                 );
