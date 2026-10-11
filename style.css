@@ -1850,6 +1850,11 @@ input {
 
 /* Mobile (<= 768px) */
 @media (max-width: 768px) {
+    .nav-inner {
+        padding: 0 16px;
+        height: 64px;
+    }
+
     .top-navbar .nav-links,
     .top-navbar .nav-actions .btn-ghost,
     .top-navbar .nav-actions .btn-primary {
@@ -1863,16 +1868,16 @@ input {
     }
 
     .hero-section {
-        padding: 64px 16px 48px;
+        padding: 56px 16px 40px;
     }
 
     .hero-heading {
-        font-size: clamp(34px, 8vw, 44px);
+        font-size: clamp(32px, 8.5vw, 44px);
         line-height: 1.15;
     }
 
     .hero-editorial {
-        font-size: clamp(30px, 7.5vw, 40px);
+        font-size: clamp(28px, 7.5vw, 40px);
     }
 
     .hero-subhead {
@@ -1880,65 +1885,337 @@ input {
         line-height: 1.55;
     }
 
+    .hero-trust-row {
+        gap: 8px 12px;
+        margin-bottom: 36px;
+        font-size: 11.5px;
+    }
+
+    .hero-dashboard-container {
+        padding: 0 4px;
+    }
+
+    .hero-dashboard-frame {
+        border-radius: 8px;
+    }
+
+    /* Trust Strip */
+    .trust-strip-section {
+        padding: 36px 16px;
+    }
+
+    .trust-strip-label {
+        font-size: 11.5px;
+        letter-spacing: 0.04em;
+        margin-bottom: 24px;
+    }
+
+    .trust-logos {
+        gap: 22px 32px;
+    }
+
+    .trust-logo-item {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    /* Bento Grid */
     .bento-section {
-        padding: 64px 16px 80px;
+        padding: 64px 16px 72px;
     }
 
     .section-title {
-        font-size: 32px;
-        line-height: 38px;
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .section-desc {
+        font-size: 15px;
+        line-height: 24px;
     }
 
     .bento-card {
-        padding: 24px;
+        padding: 22px 18px;
+        border-radius: 14px;
     }
 
+    .bento-card-title {
+        font-size: 20px;
+        line-height: 27px;
+    }
+
+    .bento-card-desc {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .bento-drag-demo {
+        padding: 12px;
+    }
+
+    .drag-item {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .drag-item-left {
+        min-width: 0;
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .drag-ghost {
+        padding: 10px 12px;
+        font-size: 12.5px;
+    }
+
+    .status-pill {
+        flex-shrink: 0;
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+
+    .bento-slash-demo {
+        padding: 12px;
+    }
+
+    .slash-row {
+        padding: 7px 10px;
+    }
+
+    .slash-row-left {
+        font-size: 13px;
+    }
+
+    .prop-box {
+        padding-top: 10px;
+    }
+
+    .prop-label {
+        font-size: 13px;
+        padding-left: 10px;
+    }
+
+    .prop-tags-row,
+    .prop-deadlines-row {
+        padding: 10px;
+        gap: 6px;
+        min-height: auto;
+    }
+
+    .tag-pill,
+    .deadline-pill {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+
+    /* Playground */
     .playground-section {
-        padding: 0 16px 60px;
+        padding: 0 16px 56px;
     }
 
     .playground-card {
-        padding: 24px 18px;
+        padding: 22px 16px;
+        border-radius: 12px;
     }
 
     .playground-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
+        padding-bottom: 20px;
     }
 
+    .playground-title {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    .playground-subtitle {
+        font-size: 13.5px;
+        line-height: 20px;
+    }
+
+    .task-progress-badge {
+        font-size: 12px;
+        padding: 5px 11px;
+    }
+
+    .playground-task-item {
+        padding: 10px 12px;
+    }
+
+    .task-left {
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .task-text {
+        font-size: 13.5px;
+        line-height: 18px;
+        word-break: break-word;
+    }
+
+    .add-task-row {
+        padding-top: 14px;
+    }
+
+    .add-task-input {
+        font-size: 13.5px;
+    }
+
+    /* Touch screen delete button visibility */
+    @media (hover: none) {
+        .task-delete-btn {
+            opacity: 0.6;
+        }
+    }
+
+    /* Persona Workflows */
     .persona-section {
-        padding: 80px 16px;
+        padding: 64px 16px;
+    }
+
+    .persona-tabs {
+        gap: 6px;
+        margin-bottom: 24px;
+    }
+
+    .persona-tab {
+        padding: 7px 13px;
+        font-size: 13.5px;
+        line-height: 19px;
     }
 
     .persona-content-card {
-        padding: 24px 18px;
+        padding: 22px 16px;
+        border-radius: 14px;
+        gap: 22px;
     }
 
+    .persona-title {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .persona-desc {
+        font-size: 14.5px;
+        line-height: 22px;
+    }
+
+    .persona-visual {
+        padding: 14px;
+        gap: 8px;
+        border-radius: 8px;
+    }
+
+    .persona-preview-item {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .preview-left {
+        min-width: 0;
+        font-size: 13px;
+        line-height: 18px;
+        gap: 8px;
+    }
+
+    .preview-left span:last-child {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tag-status {
+        font-size: 11.5px;
+        padding: 3px 6px;
+        flex-shrink: 0;
+    }
+
+    /* Testimonials */
     .testimonials-section {
-        padding: 64px 16px;
+        padding: 56px 16px;
+    }
+
+    .testimonials-section .section-title {
+        font-size: 28px;
+        line-height: 34px;
+    }
+
+    .testimonials-carousel-wrapper {
+        margin-top: 36px;
+    }
+
+    .testimonials-track {
+        gap: 16px;
+        padding: 8px 4px 16px;
     }
 
     .testimonial-card {
         flex: 0 0 88%;
         min-width: unset;
+        padding: 24px 18px;
+        border-radius: 14px;
     }
 
+    .testimonial-quote {
+        font-size: 14.5px;
+        line-height: 22px;
+        margin-bottom: 20px;
+    }
+
+    /* Pricing */
     .pricing-section {
-        padding: 64px 16px 80px;
+        padding: 56px 16px 72px;
     }
 
+    .pricing-card {
+        padding: 28px 20px;
+        border-radius: 14px;
+    }
+
+    .pricing-tier-name {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    .price-number {
+        font-size: 40px;
+        line-height: 48px;
+    }
+
+    .feature-item {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    /* CTA Banner */
     .cta-banner-card {
         flex-direction: column;
         align-items: flex-start;
+        padding: 24px 0;
+        gap: 20px;
+    }
+
+    .cta-banner-title {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .cta-banner-sub {
+        font-size: 15px;
+        line-height: 22px;
     }
 
     .cta-banner-actions {
         width: 100%;
+        min-width: unset;
     }
 
+    /* Footer */
     .footer {
-        padding: 48px 16px 28px;
+        padding: 44px 16px 28px;
     }
 
     .footer-inner {
@@ -1947,11 +2224,84 @@ input {
 
     .footer-top-grid {
         grid-template-columns: 1fr;
+        gap: 28px;
+        margin-bottom: 36px;
+    }
+
+    .footer-col-heading {
+        margin-bottom: 12px;
     }
 
     .footer-bottom {
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
         text-align: center;
+        padding-top: 24px;
+        font-size: 12.5px;
+    }
+}
+
+/* Extra Small Phones (<= 540px) */
+@media (max-width: 540px) {
+    .hero-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .hero-input {
+        padding: 12px 14px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .hero-submit {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+        font-size: 15px;
+        border-radius: 6px;
+    }
+
+    .mini-kanban-row {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 10px;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .mini-col {
+        flex: 0 0 160px;
+        scroll-snap-align: start;
+        padding: 10px;
+    }
+
+    .mini-card {
+        font-size: 13px;
+        line-height: 18px;
+        padding: 7px 8px;
+    }
+
+    .section-title {
+        font-size: 26px;
+        line-height: 32px;
+    }
+
+    .hero-heading {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .hero-editorial {
+        font-size: 26px;
+    }
+
+    .cta-banner-title {
+        font-size: 26px;
+        line-height: 32px;
     }
 }
