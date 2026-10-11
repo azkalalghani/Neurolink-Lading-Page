@@ -4,6 +4,8 @@
    ========================================================================== */
 
 :root {
+    color-scheme: light;
+
     /* Color Palette */
     --bg-body: #FBFBFA;
     --bg-surface: #FFFFFF;
@@ -68,6 +70,8 @@
 
 /* Dark Theme Support */
 [data-theme="dark"] {
+    color-scheme: dark;
+
     --bg-body: #161514;
     --bg-surface: #201F1D;
     --bg-subtle: #272624;
@@ -86,9 +90,43 @@
     --border-hover: #484742;
     --border-dark: #FAF8F5;
 
+    /* Accent Colors */
+    --accent-blue: #3B99FC;
+    --accent-blue-hover: #60A5FA;
+    --accent-blue-subtle: rgba(35, 131, 226, 0.18);
+    --accent-blue-border: rgba(59, 153, 252, 0.6);
+
+    /* Status Colors */
+    --status-orange: #FB923C;
+    --status-green: #4ADE80;
+    --status-red: #F87171;
+    --status-amber: #FBBF24;
+
+    /* Tag Colors */
+    --tag-dev-bg: rgba(0, 149, 163, 0.2);
+    --tag-dev-border: rgba(0, 185, 201, 0.35);
+    --tag-dev-text: #67E8F9;
+
+    --tag-uiux-bg: rgba(34, 197, 94, 0.2);
+    --tag-uiux-border: rgba(34, 197, 94, 0.35);
+    --tag-uiux-text: #86EFAC;
+
+    --tag-mobile-bg: rgba(99, 102, 241, 0.2);
+    --tag-mobile-border: rgba(99, 102, 241, 0.35);
+    --tag-mobile-text: #C7D2FE;
+
+    /* Shadows */
     --shadow-xs: 0px 1.125px 2.25px 0px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    --shadow-form: 0px 4.5px 22.5px -2.25px rgba(0, 0, 0, 0.4);
     --shadow-playground: 0px 8px 108px 0px rgba(0, 0, 0, 0.5);
     --shadow-dashboard: 0px 23px 50px 0px rgba(0, 0, 0, 0.6), 0px 92px 92px 0px rgba(0, 0, 0, 0.5);
+    --shadow-pro: 0px 9px 11.25px -6.75px rgba(0, 0, 0, 0.4), 0px 22.5px 28.125px -5.625px rgba(0, 0, 0, 0.3);
+}
+
+::selection {
+    background-color: var(--accent-blue);
+    color: #FFFFFF;
 }
 
 /* Base Reset */
@@ -461,6 +499,7 @@ input {
 .hero-dashboard-frame {
     width: 100%;
     background-color: var(--bg-surface);
+    border: 1.125px solid var(--border-color);
     border-radius: 12px;
     box-shadow: var(--shadow-dashboard);
     overflow: hidden;
@@ -604,7 +643,7 @@ input {
 
 /* Bento 1: Drag & Drop Demo */
 .bento-drag-demo {
-    background-color: rgba(247, 247, 245, 0.8);
+    background-color: var(--bg-subtle);
     border: 1.125px solid var(--border-color);
     border-radius: 9px;
     padding: 18px;
@@ -651,7 +690,7 @@ input {
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
-    color: #252525;
+    color: var(--text-primary);
     white-space: nowrap;
 }
 
@@ -678,6 +717,10 @@ input {
     line-height: 18px;
     font-weight: 500;
     letter-spacing: 0.01em;
+}
+
+.drag-ghost svg path {
+    stroke: var(--accent-blue);
 }
 
 .ghost-icon {
@@ -763,14 +806,14 @@ input {
     font-size: 14px;
     line-height: 20px;
     font-weight: 500;
-    color: #000000;
+    color: var(--text-primary);
     padding-left: 12px;
     margin-bottom: 8px;
 }
 
 .prop-tags-row,
 .prop-deadlines-row {
-    background-color: #F7F8F8;
+    background-color: var(--bg-subtle);
     border-top: 1px solid var(--border-color);
     padding: 12px;
     display: flex;
@@ -810,12 +853,12 @@ input {
 
 .deadline-pill {
     background-color: var(--bg-surface);
-    border: 1px solid #DEDEDE;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 4px 6px;
     font-size: 12px;
     line-height: 16px;
-    color: #252525;
+    color: var(--text-primary);
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -824,6 +867,10 @@ input {
 .deadline-icon {
     display: flex;
     align-items: center;
+}
+
+.deadline-icon svg path[fill] {
+    fill: currentColor;
 }
 
 /* Bento 4: Multi-View Databases Demo */
@@ -1180,7 +1227,7 @@ input {
 }
 
 .persona-visual {
-    background-color: rgba(247, 247, 245, 0.8);
+    background-color: var(--bg-subtle);
     border: 1.125px solid var(--border-color);
     border-radius: 9px;
     padding: 22.5px;
@@ -1522,6 +1569,10 @@ input {
     flex-shrink: 0;
 }
 
+.feature-check svg path {
+    stroke: var(--status-green);
+}
+
 .btn-pricing-cta {
     width: 100%;
     padding: 11.25px 18px;
@@ -1674,11 +1725,7 @@ input {
     font-size: 28px;
     line-height: 35px;
     font-weight: 600;
-    color: #1A1918;
-}
-
-[data-theme="dark"] .footer-brand-title {
-    color: #FFFFFF;
+    color: var(--text-primary);
 }
 
 .footer-logo-img {
@@ -1786,6 +1833,7 @@ input {
     pointer-events: auto;
     background-color: var(--bg-dark);
     color: var(--text-light);
+    border: 1px solid var(--border-color);
     padding: 12px 20px;
     border-radius: 9px;
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);

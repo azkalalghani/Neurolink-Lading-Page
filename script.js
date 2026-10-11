@@ -1892,7 +1892,8 @@
         const toggleBtn = app.querySelector('.theme-toggle-btn');
         if (!toggleBtn) return;
 
-        let currentTheme = localStorage.getItem('neurolink-theme') || 'light';
+        let savedTheme = localStorage.getItem('neurolink-theme');
+        let currentTheme = savedTheme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', currentTheme);
 
         function updateBtn() {
