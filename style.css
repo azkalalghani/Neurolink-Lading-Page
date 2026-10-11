@@ -1240,36 +1240,53 @@ input {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     background-color: var(--bg-surface);
     border: 1.125px solid var(--border-color);
-    border-radius: 4.5px;
-    padding: 13.5px;
+    border-radius: 6px;
+    padding: 12px 14px;
+    min-width: 0;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.persona-preview-item:hover {
+    border-color: var(--border-hover);
 }
 
 .preview-left {
     display: flex;
     align-items: center;
-    gap: 11.25px;
+    gap: 10px;
     font-size: 14px;
-    line-height: 17px;
+    line-height: 20px;
     font-weight: 500;
     color: var(--text-primary);
+    min-width: 0;
+    flex: 1;
+}
+
+.preview-left span:last-child {
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .preview-icon {
     color: var(--text-muted);
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .tag-status {
-    font-size: 13.5px;
-    line-height: 18px;
+    font-size: 12.5px;
+    line-height: 16px;
     font-weight: 500;
     background-color: var(--bg-subtle);
     border: 1.125px solid var(--border-color);
     border-radius: 4px;
     padding: 4px 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .tag-status-merged {
@@ -1859,8 +1876,8 @@ input {
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
 
-/* Tablet & Smaller Laptops (<= 1024px) */
-@media (max-width: 1024px) {
+/* Tablet & Smaller Laptops (<= 1080px) */
+@media (max-width: 1080px) {
     .hero-heading {
         font-size: 50px;
         line-height: 56px;
@@ -1876,7 +1893,18 @@ input {
 
     .persona-content-card {
         grid-template-columns: 1fr;
-        padding: 36px;
+        padding: 36px 32px;
+        gap: 28px;
+    }
+
+    .persona-title {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    .persona-desc {
+        font-size: 15.5px;
+        line-height: 25px;
     }
 
     .pricing-grid {
@@ -2125,20 +2153,20 @@ input {
     }
 
     .persona-tabs {
-        gap: 6px;
+        gap: 8px;
         margin-bottom: 24px;
     }
 
     .persona-tab {
-        padding: 7px 13px;
+        padding: 8px 14px;
         font-size: 13.5px;
         line-height: 19px;
     }
 
     .persona-content-card {
-        padding: 22px 16px;
+        padding: 24px 18px;
         border-radius: 14px;
-        gap: 22px;
+        gap: 20px;
     }
 
     .persona-title {
@@ -2152,33 +2180,41 @@ input {
     }
 
     .persona-visual {
-        padding: 14px;
-        gap: 8px;
+        padding: 14px 12px;
+        gap: 9px;
         border-radius: 8px;
     }
 
     .persona-preview-item {
-        padding: 10px 12px;
-        gap: 8px;
+        padding: 11px 12px;
+        gap: 10px;
+        align-items: flex-start;
     }
 
     .preview-left {
         min-width: 0;
-        font-size: 13px;
-        line-height: 18px;
-        gap: 8px;
+        font-size: 13.5px;
+        line-height: 19px;
+        gap: 9px;
+        align-items: flex-start;
+    }
+
+    .preview-icon {
+        margin-top: 2px;
     }
 
     .preview-left span:last-child {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
     }
 
     .tag-status {
         font-size: 11.5px;
-        padding: 3px 6px;
+        line-height: 15px;
+        padding: 3px 7px;
         flex-shrink: 0;
+        align-self: flex-start;
     }
 
     /* Testimonials */
@@ -2351,5 +2387,79 @@ input {
     .cta-banner-title {
         font-size: 26px;
         line-height: 32px;
+    }
+
+    /* Persona Workflows <= 540px */
+    .persona-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto 20px;
+    }
+
+    .persona-tab {
+        width: 100%;
+        text-align: center;
+        padding: 8px 10px;
+        font-size: 13px;
+        line-height: 18px;
+        white-space: nowrap;
+    }
+
+    .persona-content-card {
+        padding: 20px 14px;
+        border-radius: 12px;
+        gap: 16px;
+    }
+
+    .persona-info {
+        gap: 10px;
+    }
+
+    .persona-tag {
+        font-size: 12px;
+        padding: 3px 9px;
+    }
+
+    .persona-title {
+        font-size: 18.5px;
+        line-height: 25px;
+    }
+
+    .persona-desc {
+        font-size: 13.5px;
+        line-height: 20px;
+    }
+
+    .persona-visual {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .persona-preview-item {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .preview-left {
+        font-size: 13px;
+        line-height: 18px;
+    }
+}
+
+/* Very Small Phones (<= 400px) */
+@media (max-width: 400px) {
+    .persona-preview-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .tag-status {
+        align-self: flex-start;
+        font-size: 11px;
+        padding: 2px 6px;
     }
 }
