@@ -2186,9 +2186,12 @@ input {
     }
 
     .persona-preview-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
         padding: 11px 12px;
         gap: 10px;
-        align-items: flex-start;
     }
 
     .preview-left {
@@ -2197,10 +2200,12 @@ input {
         line-height: 19px;
         gap: 9px;
         align-items: flex-start;
+        flex: 1;
     }
 
     .preview-icon {
         margin-top: 2px;
+        flex-shrink: 0;
     }
 
     .preview-left span:last-child {
@@ -2215,6 +2220,8 @@ input {
         padding: 3px 7px;
         flex-shrink: 0;
         align-self: flex-start;
+        margin-left: auto;
+        white-space: nowrap;
     }
 
     /* Testimonials */
@@ -2439,6 +2446,10 @@ input {
     }
 
     .persona-preview-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
         padding: 10px;
         gap: 8px;
     }
@@ -2446,20 +2457,48 @@ input {
     .preview-left {
         font-size: 13px;
         line-height: 18px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tag-status {
+        flex-shrink: 0;
+        white-space: nowrap;
+        margin-left: auto;
+        align-self: flex-start;
     }
 }
 
 /* Very Small Phones (<= 400px) */
 @media (max-width: 400px) {
     .persona-preview-item {
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
         align-items: flex-start;
-        gap: 6px;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 9px 10px;
+    }
+
+    .preview-left {
+        font-size: 12.5px;
+        line-height: 17px;
+        gap: 7px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .preview-icon {
+        margin-top: 1.5px;
     }
 
     .tag-status {
-        align-self: flex-start;
         font-size: 11px;
-        padding: 2px 6px;
+        line-height: 14px;
+        padding: 2.5px 6px;
+        flex-shrink: 0;
+        white-space: nowrap;
+        margin-left: auto;
+        align-self: flex-start;
     }
 }
